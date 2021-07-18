@@ -2,7 +2,11 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
-const {ExitCode} = require(`../../constants`);
+const {
+  ExitCode,
+  MOCKS_FILE_NAME
+} = require(`../../constants`);
+
 const {
   getRandomInt,
   getRandomDate,
@@ -14,7 +18,6 @@ const Publications = {
   MAX_COUNT: 1000,
 };
 
-const FILE_NAME = `mocks.json`;
 const MAX_MONTHS_AGO = 3;
 const MAX_ANNOUNCE_SENTENCES = 5;
 const MAX_TEXT_SENTENCES = 15;
@@ -75,7 +78,7 @@ module.exports = {
     const content = JSON.stringify(generatePublications({count, titles, sentences, categories}));
 
     try {
-      await fs.writeFile(FILE_NAME, content);
+      await fs.writeFile(MOCKS_FILE_NAME, content);
       console.info(chalk.green(`Операция выполнена. Файл создан.`));
       process.exit(ExitCode.success);
     } catch (err) {
