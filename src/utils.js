@@ -19,8 +19,14 @@ const getRandomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
+const sendRequestedPath = (req, res, next) => {
+  res.send(req.baseUrl + req.path);
+  next();
+};
+
 module.exports = {
   getRandomInt,
   getRandomDate,
-  shuffle
+  shuffle,
+  sendRequestedPath
 };
