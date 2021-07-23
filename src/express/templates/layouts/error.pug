@@ -1,0 +1,15 @@
+doctype html
+html(lang="ru")
+  include ../partials/head.pug
+  body
+    .wrapper-color
+      header.header.header--error
+        a(href='#' class=`header__logo header__logo--${errorCode} logo`)
+          img(src='img/icons/logo.svg' alt='логотип Тайпотеки')
+        a.header__registration(href='#') Регистрация
+        a.header__enter(href='#') Вход с паролем
+        a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
+      main
+        block content
+      include ../partials/footer.pug
+      include ../partials/scripts.pug
