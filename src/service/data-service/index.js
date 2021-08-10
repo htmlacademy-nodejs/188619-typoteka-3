@@ -2,12 +2,10 @@
 
 const CategoryService = require(`./category`);
 const SearchService = require(`./search`);
-const OfferService = require(`./offer`);
-const CommentService = require(`./comment`);
+const ArticleService = require(`./articles`);
 
 module.exports = {
   CategoryService,
-  CommentService,
   SearchService,
-  OfferService
+  ArticleService
 };

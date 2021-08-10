@@ -3,14 +3,14 @@
 const {HttpCode} = require(`../../constants`);
 
 module.exports = (service) => (req, res, next) => {
-  const {offerId} = req.params;
-  const offer = service.findOne(offerId);
+  const {articleId} = req.params;
+  const article = service.findOne(articleId);
 
-  if (!offer) {
+  if (!article) {
     return res.status(HttpCode.NOT_FOUND)
-      .send(`Offer with ${offerId} not found`);
+      .send(`article with ${articleId} not found`);
   }
 
-  res.locals.offer = offer;
+  res.locals.article = article;
   return next();
 };

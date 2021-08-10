@@ -1,12 +1,12 @@
 'use strict';
 
 class SearchService {
-  constructor(offers) {
-    this._offers = offers;
+  constructor(articles) {
+    this._articles = articles;
   }
 
   findAll(searchText) {
-    return this._offers.filter((item) => item.title.includes(searchText));
+    return this._articles.filter((item) => item.title.includes(searchText));
   }
 }
 
