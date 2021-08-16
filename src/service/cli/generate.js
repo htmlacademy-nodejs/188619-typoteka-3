@@ -2,9 +2,11 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const {nanoid} = require(`nanoid`);
 const {
   ExitCode,
-  MOCKS_FILE_NAME
+  MOCKS_FILE_NAME,
+  MAX_ID_LENGTH
 } = require(`../../constants`);
 
 const {
@@ -15,15 +17,17 @@ const {
 
 const Publications = {
   DEFAULT_COUNT: 1,
-  MAX_COUNT: 1000,
+  MAX_COUNT: 1000
 };
 
 const MAX_MONTHS_AGO = 3;
 const MAX_ANNOUNCE_SENTENCES = 5;
 const MAX_TEXT_SENTENCES = 15;
+const MAX_COMMENTS_COUNT = 5;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
 const getContentFromFile = async (filtePath) => {
   try {
@@ -51,13 +55,24 @@ const getFullText = (sentences) => shuffle(sentences).slice(0, MAX_TEXT_SENTENCE
 
 const getCategory = (categories) => shuffle(categories).slice(0, getRandomInt(1, categories.length - 1));
 
-const generatePublications = ({count, titles, sentences, categories}) => (
+const getComments = (comments) => (
+  Array(getRandomInt(0, MAX_COMMENTS_COUNT)).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
+    text: shuffle(comments)
+      .slice(0, getRandomInt(1, 3))
+      .join(` `),
+  }))
+);
+
+const generatePublications = ({count, titles, sentences, categories, comments}) => (
   Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
     title: getTitle(titles),
     createdDate: getCreatedDate(),
     announce: getAnnounce(sentences),
     fullText: getFullText(sentences),
     сategory: getCategory(categories),
+    comments: getComments(comments)
   }))
 );
 
@@ -75,7 +90,8 @@ module.exports = {
     const titles = await getContentFromFile(FILE_TITLES_PATH);
     const sentences = await getContentFromFile(FILE_SENTENCES_PATH);
     const categories = await getContentFromFile(FILE_CATEGORIES_PATH);
-    const content = JSON.stringify(generatePublications({count, titles, sentences, categories}));
+    const comments = await getContentFromFile(FILE_COMMENTS_PATH);
+    const content = JSON.stringify(generatePublications({count, titles, sentences, categories, comments}));
 
     try {
       await fs.writeFile(MOCKS_FILE_NAME, content);
