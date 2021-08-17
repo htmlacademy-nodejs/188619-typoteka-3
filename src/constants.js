@@ -18,3 +18,8 @@ module.exports.HttpCode = {
 module.exports.MOCKS_FILE_NAME = `mocks.json`;
 
 module.exports.MAX_ID_LENGTH = 6;
+
+module.exports.Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};
