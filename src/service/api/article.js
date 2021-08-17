@@ -69,7 +69,7 @@ module.exports = (app, service) => {
       .json(comment);
   });
 
-  route.delete(`/:articleId/comments/:commentId`, [articleExist(service), commentExist()], (req, res) => {
+  route.delete(`/:articleId/comments/:commentId`, [articleExist(service), commentExist], (req, res) => {
     const {articleId, commentId} = req.params;
     const comment = service.dropComment(articleId, commentId);
 
