@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Булат Гарифуллин](https://up.htmlacademy.ru/nodejs/3/user/188619).
-* Наставник: [Сергей Рожков](https://htmlacademy.ru/profile/id1069033).
+* Наставник: [Вадим Осюков](https://htmlacademy.ru/profile/id1411353).
 
 ---
 
