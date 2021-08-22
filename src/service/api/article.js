@@ -36,11 +36,11 @@ module.exports = (app, service) => {
   route.post(`/`, articleValidator, (req, res) => {
     const article = service.create(req.body);
 
-    return res.status(HttpCode.OK)
+    return res.status(HttpCode.CREATED)
       .json(article);
   });
 
-  route.put(`/:articleId`, articleExist(service), (req, res) => {
+  route.put(`/:articleId`, [articleExist(service), articleValidator], (req, res) => {
     const {articleId} = req.params;
     const offer = service.update(articleId, req.body);
 
@@ -65,7 +65,7 @@ module.exports = (app, service) => {
   route.post(`/:articleId/comments`, [articleExist(service), commentValidator], (req, res) => {
     const {articleId} = req.params;
     const comment = service.createComment(articleId, req.body);
-    return res.status(HttpCode.OK)
+    return res.status(HttpCode.CREATED)
       .json(comment);
   });
 

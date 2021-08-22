@@ -48,7 +48,7 @@ class articleservice {
     const article = this.findOne(articleId);
     let comments = article.comments;
     const deletedComment = comments.find((item) => item.id === commentId);
-    comments = comments.filter((item) => item.id !== commentId);
+    article.comments = comments.filter((item) => item.id !== commentId);
     this.update(articleId, article);
 
     return deletedComment;
