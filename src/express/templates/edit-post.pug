@@ -28,7 +28,7 @@ block content
                     input.visually-hidden(type='file' name='photo')
                     | Обзор
               .new-publication__category-wrapper
-                each category in article.сategory
+                each category in article.category
                   .new-publication__checkbox.new-publication__checkbox--auto
                     input(type='checkbox' name='category' value=category id=category checked) 
                     label(for=category) #{category}

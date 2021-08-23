@@ -71,7 +71,7 @@ const generatePublications = ({count, titles, sentences, categories, comments}) 
     createdDate: getCreatedDate(),
     announce: getAnnounce(sentences),
     fullText: getFullText(sentences),
-    сategory: getCategory(categories),
+    category: getCategory(categories),
     comments: getComments(comments)
   }))
 );
