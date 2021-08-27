@@ -33,23 +33,25 @@ class articleservice {
     return article;
   }
 
-  createComment(offerId, comment) {
-    const article = this.findOne(offerId);
-    article.comments.push({
+  createComment(articleId, comment) {
+    const article = this.findOne(articleId);
+    const newComment = {
       id: nanoid(MAX_ID_LENGTH),
       text: comment.text
-    });
+    };
+    article.comments.push(newComment);
 
-    return article.comments;
+    return newComment;
   }
 
-  dropComment(offerId, commentId) {
-    const article = this.findOne(offerId);
+  dropComment(articleId, commentId) {
+    const article = this.findOne(articleId);
     let comments = article.comments;
-    comments = comments.filter((item) => item.id !== commentId);
-    this.update(offerId, article);
+    const deletedComment = comments.find((item) => item.id === commentId);
+    article.comments = comments.filter((item) => item.id !== commentId);
+    this.update(articleId, article);
 
-    return comments;
+    return deletedComment;
   }
 
   findAll() {

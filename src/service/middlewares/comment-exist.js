@@ -2,7 +2,7 @@
 
 const {HttpCode} = require(`../../constants`);
 
-module.exports = () => (req, res, next) => {
+module.exports = (req, res, next) => {
   const article = res.locals.article;
   const {commentId} = req.params;
 
