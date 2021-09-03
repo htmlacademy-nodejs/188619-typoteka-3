@@ -14,7 +14,6 @@ const {
 const {
   getRandomInt,
   getRandomSubarray,
-  getRandomDate,
   shuffle,
 } = require(`../../utils`);
 
@@ -23,7 +22,6 @@ const Publications = {
   MAX_COUNT: 1000
 };
 
-const MAX_MONTHS_AGO = 3;
 const MAX_ANNOUNCE_SENTENCES = 5;
 const MAX_TEXT_SENTENCES = 15;
 const MAX_COMMENTS_COUNT = 5;
@@ -74,8 +72,7 @@ module.exports = {
   name: `--filldb`,
   async run(args) {
     const [countArg] = args;
-    // const count = Number.parseInt(countArg, 10) || Publications.DEFAULT_COUNT;
-    const count = 2;
+    const count = Number.parseInt(countArg, 10) || Publications.DEFAULT_COUNT;
 
     if (count > Publications.MAX_COUNT) {
       console.error(chalk.red(`Не больше ${Publications.MAX_COUNT} публикаций.`));

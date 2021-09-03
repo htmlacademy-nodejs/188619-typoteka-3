@@ -12,7 +12,7 @@ const define = (sequelize) => {
   const Article = defineArticle(sequelize);
 
   class ArticleCategory extends Model {}
-  ArticleCategory.init({}, {sequelize, name: Aliase.ARTICLE_CATEGORIES});
+  ArticleCategory.init({}, {sequelize, tableName: Aliase.ARTICLE_CATEGORIES});
 
   Article.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `articleId`});
   Comment.belongsTo(Article, {foreignKey: `articleId`});
