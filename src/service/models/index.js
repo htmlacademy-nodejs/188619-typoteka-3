@@ -13,8 +13,8 @@ const define = (sequelize) => {
   const Comment = defineComment(sequelize);
   const Article = defineArticle(sequelize);
 
-  Article.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `offerId`});
-  Comment.belongsTo(Article, {foreignKey: `offerId`});
+  Article.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `articleId`});
+  Comment.belongsTo(Article, {foreignKey: `articleId`});
 
   ArticleCategory.init({}, {sequelize, tableName: `articleCategories`});
 
