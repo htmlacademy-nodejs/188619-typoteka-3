@@ -38,7 +38,6 @@ class ArticleService {
     if (needComments) {
       include.push(Aliase.COMMENTS);
     }
-    console.log({include})
     const articles = await this._Article.findAll({include});
     return articles.map((item) => item.get());
   }

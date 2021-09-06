@@ -14,7 +14,8 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const offers = await articleService.findAll();
+    const {comments} = req.query;
+    const offers = await articleService.findAll(comments);
 
     return res.status(HttpCode.OK)
       .json(offers);

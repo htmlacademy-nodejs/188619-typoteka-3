@@ -4,8 +4,6 @@ const {Router} = require(`express`);
 const articlesRouter = new Router();
 const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
-const {ensureArray} = require(`../../utils`);
-
 
 articlesRouter.get(`/add`, async (req, res) => {
   const categories = await api.getCategories();
@@ -28,7 +26,7 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
     fullText: body[`full-text`],
     announce: body.announce,
     title: body.title,
-    category: ensureArray(body.category),
+    category: body.category,
   };
 
   try {

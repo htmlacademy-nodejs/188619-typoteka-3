@@ -11,7 +11,7 @@ block content
       each category in categories
         li.themes__item
           a.themes__item-link(href='#')
-            | #{category}
+            | #{category.name}
             sup 88
   .main-page__section-flex
     section.main-page__hot.hot
@@ -60,9 +60,9 @@ block content
       each article in articles
         li.preview__item
           ul.preview__breadcrumbs
-            each category in article.category
+            each category in article.categories
               li.preview__breadcrumbs-item
-                a.preview__breadcrumbs-link(href='#') #{category}
+                a.preview__breadcrumbs-link(href='#') #{category.name}
           .preview__background
             img.preview__background-image(src='img/skyscraper@1x.jpg' width='460' height='240' srcset='img/skyscraper@1x.jpg, img/skyscraper@2x.jpg 2x' alt='Фотография небоскреба')
           time.preview__time(datetime='2019-03-21T20:33') #{article.createdDate}
