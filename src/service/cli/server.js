@@ -30,11 +30,11 @@ module.exports = {
     try {
       logger.info(`Trying to connect to database...`);
       await sequelize.authenticate();
+      logger.info(`Connection to database established`);
     } catch (err) {
       logger.error(`An error occurred: ${err.message}`);
-      process.exit(1);
+      throw err;
     }
-    logger.info(`Connection to database established`);
 
     app
       .listen(port, () => {
