@@ -4,8 +4,7 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
-const defineModels = require(`../models`);
-const Aliase = require(`../models/aliase`);
+const initDatabase = require(`../lib/init-db`);
 
 const {
   ExitCode,
@@ -88,31 +87,12 @@ module.exports = {
     }
     logger.info(`Connection to database established`);
 
-    const {Category, Article} = defineModels(sequelize);
-    await sequelize.sync({force: true});
-
     const titles = await getContentFromFile(FILE_TITLES_PATH);
     const sentences = await getContentFromFile(FILE_SENTENCES_PATH);
     const categories = await getContentFromFile(FILE_CATEGORIES_PATH);
     const comments = await getContentFromFile(FILE_COMMENTS_PATH);
 
-    const categoryModels = await Category.bulkCreate(
-        categories.map((item) => ({name: item}))
-    );
-
-    const articles = generateArticles(count, titles, sentences, categoryModels, comments);
-    const articlesPromises = articles.map(async (article) => {
-      const articleModel = await Article.create(article, {include: [Aliase.COMMENTS]});
-      await articleModel.addCategories(article.categories);
-    });
-
-    try {
-      logger.info(`Trying to fill database...`);
-      await Promise.all(articlesPromises);
-      logger.info(`Database filled successfully!`);
-    } catch (error) {
-      logger.error(`Database filling error: ${error.message}`);
-      process.exit(ExitCode.error);
-    }
+    const articles = generateArticles(count, titles, sentences, categories, comments);
+    return initDatabase(sequelize, {articles, categories});
   }
 };

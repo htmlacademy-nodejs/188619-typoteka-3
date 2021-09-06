@@ -5,11 +5,11 @@ const Aliase = require(`../models/aliase`);
 
 class SearchService {
   constructor(sequelize) {
-    this._Offer = sequelize.models.Offer;
+    this._Article = sequelize.models.Article;
   }
 
   async findAll(searchText) {
-    const offers = await this._Offer.findAll({
+    const offers = await this._Article.findAll({
       where: {
         title: {
           [Op.substring]: searchText
