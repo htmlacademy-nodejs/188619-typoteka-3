@@ -10,7 +10,11 @@ articlesRouter.get(`/add`, async (req, res) => {
   res.render(`new-post`, {categories});
 });
 
-articlesRouter.get(`/:id`, (req, res) => res.render(`posts/post`));
+articlesRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const article = await api.getArticle(id, {comments: true});
+  res.render(`posts/post`, {article});
+});
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
