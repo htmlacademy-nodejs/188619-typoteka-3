@@ -4,10 +4,10 @@ INSERT INTO users(email, password_hash, first_name, last_name, avatar) VALUES
 ('petrov@example.com', '5f4dcc3b5aa765d61d8327deb882cf99', 'Пётр', 'Петров', 'avatar2.jpg');
 
 -- Создаем категории
-INSERT INTO categories(name) VALUES
-('За жизнь'),
-('Разное'),
-('Музыка');
+INSERT INTO categories(id, name) VALUES
+(1, 'За жизнь'),
+(2, 'Разное'),
+(3, 'Музыка');
 
 -- Создаем публикации
 ALTER TABLE articles DISABLE TRIGGER ALL;
