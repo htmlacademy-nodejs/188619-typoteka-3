@@ -124,7 +124,7 @@ const createAPI = (service) => {
   return app;
 };
 
-describe(`Searching by query string`, () => {
+describe(`GET /search - Searching by query string`, () => {
   describe(`Serching exist offer by valid query string`, () => {
     let dataService = null;
     let response = null;
@@ -149,11 +149,10 @@ describe(`Searching by query string`, () => {
 
     test(`Returns correct offers`, async () => {
       const serviceResult = await dataService.findAll(`Топ лайфхаки для тебя`);
-      expect(response.body[0]).toEqual({
-        ...serviceResult[0],
-        "createdAt": expect.anything(),
-        "updatedAt": expect.anything()
-      });
+      const serchResult = response.body;
+      expect(serchResult[0].title).toEqual(serviceResult[0].title);
+      expect(serchResult[0].announce).toEqual(serviceResult[0].announce);
+      expect(serchResult[0].fullText).toEqual(serviceResult[0].fullText);
     });
   });
 

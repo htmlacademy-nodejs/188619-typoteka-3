@@ -124,7 +124,7 @@ const createAPI = (service) => {
   return app;
 };
 
-describe(`Getting list of all categories`, () => {
+describe(`GET /categories - Getting list of all categories`, () => {
   describe(`Getting list if categories exist`, () => {
     let dataService = null;
     let response = null;
@@ -142,10 +142,7 @@ describe(`Getting list of all categories`, () => {
     });
 
     test(`Response body should be equal to data categories`, () => {
-      const mappedResponse = response.body.map((it) => it.name);
-      expect(mappedResponse).toEqual(
-          expect.arrayContaining(mockCategories)
-      );
+      expect(response.body[0].name).toEqual(mockCategories[0]);
     });
   });
 

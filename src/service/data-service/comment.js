@@ -2,13 +2,13 @@
 
 class CommentService {
   constructor(sequelize) {
-    this._Offer = sequelize.models.Offer;
+    this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
   }
 
-  create(offerId, comment) {
+  create(articleId, comment) {
     return this._Comment.create({
-      offerId,
+      articleId,
       ...comment
     });
   }
@@ -20,9 +20,9 @@ class CommentService {
     return !!deletedRows;
   }
 
-  findAll(offerId) {
+  findAll(articleId) {
     return this._Comment.findAll({
-      where: {offerId},
+      where: {articleId},
       raw: true
     });
   }
