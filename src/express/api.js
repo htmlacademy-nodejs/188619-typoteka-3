@@ -32,7 +32,7 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  async getCategories({count}) {
+  async getCategories({count} = {}) {
     return this._load(`/categories`, {params: {count}});
   }
 

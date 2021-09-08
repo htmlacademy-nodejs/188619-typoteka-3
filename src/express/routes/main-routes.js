@@ -26,7 +26,7 @@ mainRouter.get(`/search`, async (req, res) => {
     });
   }
 });
-mainRouter.get(`/categories`, (req, res) => res.render(`all-categories`));
+mainRouter.get(`/categories`, (req, res) => res.render(`categories`));
 mainRouter.get(`/404`, (req, res) => res.render(`errors/404`, {errorCode: `404`}));
 mainRouter.get(`/500`, (req, res) => res.render(`errors/500`, {errorCode: `500`}));
 

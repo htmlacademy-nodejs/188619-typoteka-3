@@ -1,4 +1,4 @@
-extends ./layouts/base.pug
+extends ../layouts/base.pug
 
 block content
   section
@@ -19,7 +19,7 @@ block content
             .form__wrapper.form__wrapper--intro
               .form__field
                 label
-                  input(type='text' name='title' placeholder='Заголовок' value=article.title required)
+                  input(type='text' name='title' placeholder='Заголовок' required)
               .form__field.form__field--post-image
                 label
                   input#image-name-field(type='text' name='file' placeholder='Фотография' readonly)
@@ -28,15 +28,15 @@ block content
                     input.visually-hidden(type='file' name='photo')
                     | Обзор
               .new-publication__category-wrapper
-                each category in article.categories
+                each category in categories
                   .new-publication__checkbox.new-publication__checkbox--auto
-                    input(type='checkbox' name='category' value=category.name id=category.id checked) 
+                    input(type='checkbox' name='category' value=category.name id=category.id) 
                     label(for=category.id) #{category.name}
                 a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
             .form__wrapper.form__wrapper--text
               .form__field.form__field--publication-text
                 label
-                  textarea(rows='5' name='announce' placeholder='Анонс публикации') #{article.announce}
+                  textarea(rows='5' name='announce' placeholder='Анонс публикации')
               .form__field.form__field--publication-text
                 label
-                  textarea(rows='10' name='full-text' placeholder='Полный текст публикации') #{article.fullText}
+                  textarea(rows='10' name='full-text' placeholder='Полный текст публикации')
