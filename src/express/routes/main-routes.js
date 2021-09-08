@@ -6,8 +6,8 @@ const api = require(`../api`).getAPI();
 
 mainRouter.get(`/`, async (req, res) => {
   const [articles, categories] = await Promise.all([
-    api.getArticles(),
-    api.getCategories()
+    api.getArticles({comments: true}),
+    api.getCategories({count: true})
   ]);
   res.render(`main`, {articles, categories});
 });

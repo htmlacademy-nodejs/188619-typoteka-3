@@ -4,15 +4,17 @@ const {Router} = require(`express`);
 const articlesRouter = new Router();
 const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
-const {ensureArray} = require(`../../utils`);
-
 
 articlesRouter.get(`/add`, async (req, res) => {
   const categories = await api.getCategories();
   res.render(`new-post`, {categories});
 });
 
-articlesRouter.get(`/:id`, (req, res) => res.render(`posts/post`));
+articlesRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const article = await api.getArticle(id, {comments: true});
+  res.render(`posts/post`, {article});
+});
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
@@ -28,7 +30,7 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
     fullText: body[`full-text`],
     announce: body.announce,
     title: body.title,
-    category: ensureArray(body.category),
+    category: body.category,
   };
 
   try {

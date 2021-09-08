@@ -26,10 +26,25 @@ const sendRequestedPath = (req, res, next) => {
 
 const ensureArray = (value) => Array.isArray(value) ? value : [value];
 
+const getRandomSubarray = (items) => {
+  items = items.slice();
+  let count = getRandomInt(1, items.length - 1);
+  const result = [];
+  while (count--) {
+    result.push(
+        ...items.splice(
+            getRandomInt(0, items.length - 1), 1
+        )
+    );
+  }
+  return result;
+};
+
 module.exports = {
   getRandomInt,
   getRandomDate,
   shuffle,
   sendRequestedPath,
-  ensureArray
+  ensureArray,
+  getRandomSubarray
 };
