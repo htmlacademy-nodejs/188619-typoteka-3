@@ -40,10 +40,15 @@ const getRandomSubarray = (items) => {
   return result;
 };
 
+const prepareErrors = (errors) => {
+  return errors.response.data.split(`\n`);
+};
+
 module.exports = {
   getRandomInt,
   getRandomDate,
   shuffle,
+  prepareErrors,
   sendRequestedPath,
   ensureArray,
   getRandomSubarray

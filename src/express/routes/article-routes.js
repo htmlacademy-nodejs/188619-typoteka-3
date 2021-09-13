@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const articlesRouter = new Router();
 const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
+const {prepareErrors} = require(`../../utils`);
 
 articlesRouter.get(`/add`, async (req, res) => {
   const categories = await api.getCategories();
@@ -36,9 +37,10 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
   try {
     await api.createArticle(articleData);
     res.redirect(`/my`);
-  } catch (e) {
-    console.log(e);
-    res.redirect(`back`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const categories = await api.getCategories();
+    res.render(`articles/new`, {categories, validationMessages});
   }
 });
 
