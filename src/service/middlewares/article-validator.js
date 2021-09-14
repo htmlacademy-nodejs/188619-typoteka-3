@@ -5,6 +5,7 @@ const {HttpCode} = require(`../../constants`);
 
 const ErrorArticleMessage = {
   CATEGORIES: `Не выбрана ни одна категория объявления`,
+  DATE: `Поле дата обязательно к заполнению`,
   TITLE_MIN: `Заголовок содержит меньше 30 символов`,
   TITLE_MAX: `Заголовок не может содержать более 250 символов`,
   ANNOUNCE: `Поле аннонс обязательно к заполнению`,
@@ -28,6 +29,9 @@ const schema = Joi.object({
     'string.empty': ErrorArticleMessage.ANNOUNCE,
     'string.min': ErrorArticleMessage.ANNOUNCE_MIN,
     'string.max': ErrorArticleMessage.ANNOUNCE_MAX
+  }),
+  date: Joi.date().required().messages({
+    'any.required': ErrorArticleMessage.DATE
   }),
   picture: Joi.string().allow(null, ``).messages({
     'string': ErrorArticleMessage.PICTURE

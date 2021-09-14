@@ -14,9 +14,13 @@ const define = (sequelize) => Article.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  date: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
   fullText: {
     type: DataTypes.TEXT
-  }
+  },
 }, {
   sequelize,
   modelName: `Article`,

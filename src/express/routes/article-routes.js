@@ -29,6 +29,7 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
     picture: file ? file.filename : ``,
     fullText: body[`full-text`],
     announce: body.announce,
+    date: body.date,
     title: body.title,
     categories: ensureArray(body.categories),
   };
@@ -40,6 +41,28 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
     const validationMessages = prepareErrors(errors);
     const categories = await api.getCategories();
     res.render(`articles/new`, {categories, validationMessages});
+  }
+});
+
+articlesRouter.post(`/edit/:id`, upload.single(`photo`), async (req, res) => {
+  const {body, file} = req;
+  const {id} = req.params;
+  const articleData = {
+    picture: file ? file.filename : ``,
+    fullText: body[`full-text`],
+    announce: body.announce,
+    date: body.date,
+    title: body.title,
+    categories: ensureArray(body.categories),
+  };
+
+  try {
+    await api.editArticle(id, articleData);
+    res.redirect(`/my`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const [categories, article] = await Promise.all([api.getCategories(), api.getArticle(id)]);
+    res.render(`articles/edit`, {categories, article, validationMessages});
   }
 });
 

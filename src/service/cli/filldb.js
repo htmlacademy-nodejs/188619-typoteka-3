@@ -13,6 +13,7 @@ const {
 const {
   getRandomInt,
   getRandomSubarray,
+  getRandomDate,
   shuffle,
 } = require(`../../utils`);
 
@@ -23,6 +24,7 @@ const Publications = {
 
 const MAX_ANNOUNCE_SENTENCES = 5;
 const MAX_TEXT_SENTENCES = 15;
+const MAX_MONTHS_AGO = 3;
 const MAX_COMMENTS_COUNT = 5;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
@@ -39,6 +41,12 @@ const getContentFromFile = async (filtePath) => {
     console.error(chalk.red(err));
     return [];
   }
+};
+
+const getCreatedDate = () => {
+  const endDate = new Date();
+  const startDate = new Date(new Date().setMonth(endDate.getMonth() - MAX_MONTHS_AGO));
+  return getRandomDate(startDate, endDate);
 };
 
 const getTitle = (titles) => titles[getRandomInt(0, titles.length - 1)];
@@ -61,6 +69,7 @@ const generateArticles = (count, titles, sentences, categories, comments) => (
   Array(count).fill({}).map(() => ({
     title: getTitle(titles),
     announce: getAnnounce(sentences),
+    date: getCreatedDate(),
     fullText: getFullText(sentences),
     categories: getCategories(categories),
     comments: getComments(comments)
