@@ -131,7 +131,7 @@ describe(`POST /articles - Posting new article`, () => {
     let response = null;
 
     const newArticle = {
-      "title": `Три принципа ООП`,
+      "title": `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
       "announce": `Разберем фундаментальные принципы ООП`,
       "fullText": `Объектно-ориентированное программирование основано на «трех китах»`,
       "categories": [1, 2]
@@ -168,9 +168,8 @@ describe(`POST /articles - Posting new article`, () => {
     let app = null;
 
     const newArticle = {
-      "title": `Три принципа ООП`,
+      "title": `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
       "announce": `Разберем фундаментальные принципы ООП`,
-      "fullText": `Объектно-ориентированное программирование основано на «трех китах»`,
       "categories": [1, 2]
     };
 
@@ -300,7 +299,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
     let response = null;
 
     const newArticle = {
-      title: `Три принципа ООП`,
+      title: `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
       announce: `Разберем фундаментальные принципы ООП`,
       fullText: `Объектно-ориентированное программирование основано на «трех китах»`,
       categories: [3]
@@ -362,7 +361,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
     let response = null;
 
     const newArticle = {
-      title: `Три принципа ООП`,
+      title: `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
       announce: `Разберем фундаментальные принципы ООП`,
       fullText: `Объектно-ориентированное программирование основано на «трех китах»`,
       categories: [3]
@@ -373,11 +372,35 @@ describe(`PUT /articles/:id - Changing an article`, () => {
       await initDB(mockDB, {categories: mockCategories, articles: mockData});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
-      response = await request(app).put(`/articles/NONEXIST`).send(newArticle);
+      response = await request(app).put(`/articles/999999`).send(newArticle);
     });
 
     test(`Status code should be 404`, () => {
       expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
+  });
+
+  describe(`Changing article with invalid id`, () => {
+    let dataService = null;
+    let response = null;
+
+    const newArticle = {
+      title: `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
+      announce: `Разберем фундаментальные принципы ООП`,
+      fullText: `Объектно-ориентированное программирование основано на «трех китах»`,
+      categories: [3]
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      dataService = new DataService(mockDB);
+      const app = createAPI(dataService);
+      response = await request(app).put(`/articles/INVALID`).send(newArticle);
+    });
+
+    test(`Status code should be 400`, () => {
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
     });
   });
 });
@@ -538,7 +561,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
       await initDB(mockDB, {categories: mockCategories, articles: mockData});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
-      response = await request(app).post(`/articles/NONEXIST/comments`).send(newComment);
+      response = await request(app).post(`/articles/9999/comments`).send(newComment);
     });
 
     test(`Status code should be 404 `, () => {

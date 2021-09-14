@@ -8,7 +8,7 @@ const ErrorCommentMessage = {
 };
 
 const schema = Joi.object({
-  text: Joi.string().min(20).required().messages({
+  text: Joi.string().min(10).required().messages({
     'string.min': ErrorCommentMessage.TEXT
   })
 });
