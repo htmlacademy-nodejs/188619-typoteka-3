@@ -12,7 +12,7 @@ class SearchService {
     const offers = await this._Article.findAll({
       where: {
         title: {
-          [Op.substring]: searchText
+          [Op.iLike]: `%${searchText}%`
         }
       },
       include: [Aliase.CATEGORIES],

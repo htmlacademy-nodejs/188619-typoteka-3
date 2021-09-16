@@ -22,8 +22,8 @@ const Publications = {
   MAX_COUNT: 1000
 };
 
-const MAX_ANNOUNCE_SENTENCES = 5;
-const MAX_TEXT_SENTENCES = 15;
+const MAX_ANNOUNCE_SENTENCES = 3;
+const MAX_TEXT_SENTENCES = 5;
 const MAX_MONTHS_AGO = 3;
 const MAX_COMMENTS_COUNT = 5;
 const FILE_TITLES_PATH = `./data/titles.txt`;

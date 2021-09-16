@@ -1,7 +1,13 @@
 -
   const humanDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString();
+    return date.toLocaleString().slice(0, -3);
+  }
+
+-
+  const prettyDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString().slice(0, 10);
   }
 
 mixin pagination(page, totalPages, width, prefix)
@@ -44,3 +50,4 @@ mixin insertErrorMessage(messages)
   if messages
     each message in messages
       .server-error= message
+

@@ -169,7 +169,7 @@ describe(`POST /articles - Posting new article`, () => {
     });
   });
 
-  describe(`Posting article with invalid data`, () => {
+  describe(`Posting article without some keys`, () => {
     let dataService = null;
     let app = null;
 
@@ -202,6 +202,53 @@ describe(`POST /articles - Posting new article`, () => {
         expect(serviceResult).toBeNull();
       });
     }
+  });
+
+  describe(`Posting article with invalid data`, () => {
+    let dataService = null;
+    let app = null;
+
+    const newArticle = {
+      "title": `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
+      "announce": `Разберем фундаментальные принципы ООП`,
+      "date": Date.now(),
+      "categories": [1, 2]
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      dataService = new DataService(mockDB);
+      app = createAPI(dataService);
+    });
+
+    test(`When field type is wrong type response code is 400`, async () => {
+      const badArticles = [
+        {...newArticle, title: true},
+        {...newArticle, date: false},
+        {...newArticle, categories: `Котики`}
+      ];
+      for (const badArticle of badArticles) {
+        await request(app)
+          .post(`/articles`)
+          .send(badArticle)
+          .expect(HttpCode.BAD_REQUEST);
+      }
+    });
+
+    test(`When field type is invalid response code is 400`, async () => {
+      const badArticles = [
+        {...newArticle, title: `Короткий`},
+        {...newArticle, announce: `Short`},
+        {...newArticle, categories: []}
+      ];
+      for (const badArticle of badArticles) {
+        await request(app)
+          .post(`/articles`)
+          .send(badArticle)
+          .expect(HttpCode.BAD_REQUEST);
+      }
+    });
   });
 });
 
