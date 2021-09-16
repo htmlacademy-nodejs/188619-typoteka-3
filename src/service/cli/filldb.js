@@ -5,7 +5,8 @@ const chalk = require(`chalk`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
 const initDatabase = require(`../lib/init-db`);
-
+const passwordUtils = require(`../lib/password`);
+const logger = getLogger({name: `api`});
 const {
   ExitCode,
 } = require(`../../constants`);
@@ -31,8 +32,6 @@ const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
-const logger = getLogger({name: `api`});
-
 const getContentFromFile = async (filtePath) => {
   try {
     const content = await fs.readFile(filtePath, `utf8`);
@@ -57,22 +56,24 @@ const getFullText = (sentences) => shuffle(sentences).slice(0, MAX_TEXT_SENTENCE
 
 const getCategories = (categories) => getRandomSubarray(categories);
 
-const getComments = (comments) => (
+const getComments = (comments, users) => (
   Array(getRandomInt(0, MAX_COMMENTS_COUNT)).fill({}).map(() => ({
+    user: users[getRandomInt(0, users.length - 1)].email,
     text: shuffle(comments)
       .slice(0, getRandomInt(1, 3))
       .join(` `),
   }))
 );
 
-const generateArticles = (count, titles, sentences, categories, comments) => (
+const generateArticles = (count, titles, sentences, categories, comments, users) => (
   Array(count).fill({}).map(() => ({
     title: getTitle(titles),
     announce: getAnnounce(sentences),
     date: getCreatedDate(),
     fullText: getFullText(sentences),
     categories: getCategories(categories),
-    comments: getComments(comments)
+    comments: getComments(comments, users),
+    user: users[0].email
   }))
 );
 
@@ -100,8 +101,24 @@ module.exports = {
     const sentences = await getContentFromFile(FILE_SENTENCES_PATH);
     const categories = await getContentFromFile(FILE_CATEGORIES_PATH);
     const comments = await getContentFromFile(FILE_COMMENTS_PATH);
+    const users = [
+      {
+        name: `Иван`,
+        surname: `Иванов`,
+        email: `ivanov@example.com`,
+        passwordHash: await passwordUtils.hash(`ivanov`),
+        avatar: `avatar01.jpg`
+      },
+      {
+        name: `Пётр`,
+        surname: `Петров`,
+        email: `petrov@example.com`,
+        passwordHash: await passwordUtils.hash(`petrov`),
+        avatar: `avatar02.jpg`
+      }
+    ];
 
-    const articles = generateArticles(count, titles, sentences, categories, comments);
-    return initDatabase(sequelize, {articles, categories});
+    const articles = generateArticles(count, titles, sentences, categories, comments, users);
+    return initDatabase(sequelize, {articles, categories, users});
   }
 };

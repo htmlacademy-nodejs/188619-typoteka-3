@@ -13,6 +13,7 @@ const ErrorArticleMessage = {
   ANNOUNCE_MAX: `Анонс не может содержать более 250 символов`,
   PICTURE: `Тип изображения не поддерживается`,
   TEXT_MAX: `Текст публикации не может содержать более 1000 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`
 };
 
 const schema = Joi.object({
@@ -39,6 +40,9 @@ const schema = Joi.object({
   fullText: Joi.string().allow(null, ``).max(1000).messages({
     'string.max': ErrorArticleMessage.TEXT_MAX
   }),
+  userId: Joi.number().integer().positive().required().messages({
+    'number.base': ErrorArticleMessage.USER_ID
+  })
 });
 
 module.exports = (req, res, next) => {

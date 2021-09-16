@@ -8,120 +8,8 @@ const article = require(`./article`);
 const DataService = require(`../data-service/articles`);
 const CommentService = require(`../data-service/comment`);
 const initDB = require(`../lib/init-db`);
+const {mockCategories, mockData, mockUsers} = require(`../../mocks`);
 
-const mockCategories = [
-  `За жизнь`,
-  `Программирование`,
-  `Железо`
-];
-
-const mockData = [
-  {
-    title: `Топ лайфхаки для тебя`,
-    announce:
-      `Он написал больше 30 хитов. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Программировать не настолько сложно, как об этом говорят. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.`,
-    fullText:
-      `Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Из под его пера вышло 8 платиновых альбомов. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Достичь успеха помогут ежедневные повторения. Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Ёлки — это не просто красивое дерево. Это прочная древесина. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Это один из лучших рок-музыкантов. Согласно официальной версии, принятой в настоящее время, город был основан более 1000 лет назад. Простые ежедневные упражнения помогут достичь успеха. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Первая большая ёлка была установлена только в 1938 году. Как начать действовать? Для начала просто соберитесь. Он написал больше 30 хитов.`,
-    categories: [`За жизнь`],
-    date: Date.now(),
-    comments: [
-      {
-        text: `Планируете записать видосик на эту тему?`,
-      },
-    ],
-  },
-  {
-    title: `Рецепт домашней пиццы`,
-    announce:
-      `Программировать не настолько сложно, как об этом говорят. Ёлки — это не просто красивое дерево. Это прочная древесина. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Согласно официальной версии, принятой в настоящее время, город был основан более 1000 лет назад. Вкуснейшая домашняя пицца на тонком бездрожжевом тесте. Готовится тесто для пиццы без дрожжей очень быстро.`,
-    fullText:
-      `Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Достичь успеха помогут ежедневные повторения. Первая большая ёлка была установлена только в 1938 году. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Золотое сечение — соотношение двух величин, гармоническая пропорция. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Программировать не настолько сложно, как об этом говорят. Ёлки — это не просто красивое дерево. Это прочная древесина. Как начать действовать? Для начала просто соберитесь. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Вкуснейшая домашняя пицца на тонком бездрожжевом тесте. Готовится тесто для пиццы без дрожжей очень быстро. Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры.`,
-    date: Date.now(),
-    categories: [
-      `Программирование`,
-      `Железо`,
-    ],
-    comments: [
-      {
-        text: `Это где ж такие красоты? Планируете записать видосик на эту тему? Плюсую, но слишком много буквы!`,
-      },
-      {
-        text: `Давно не пользуюсь стационарными компьютерами. Ноутбуки победили. Мне кажется или я уже читал это где-то?`,
-      },
-      {
-        text: `Хочу такую же футболку :-)`,
-      },
-      {
-        text: `Планируете записать видосик на эту тему? Согласен с автором!`,
-      },
-      {
-        text: `Это где ж такие красоты?`,
-      },
-    ],
-  },
-  {
-    title: `Ёлки. История деревьев`,
-    announce:
-      `Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Он написал больше 30 хитов. У нас есть лайфхак для тех, кто любит отдыхать на свежем воздухе! Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами.`,
-    fullText:
-      `Как начать действовать? Для начала просто соберитесь. Достичь успеха помогут ежедневные повторения. Ёлки — это не просто красивое дерево. Это прочная древесина. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Из под его пера вышло 8 платиновых альбомов. Это один из лучших рок-музыкантов. У нас есть лайфхак для тех, кто любит отдыхать на свежем воздухе! Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Первая большая ёлка была установлена только в 1938 году. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Золотое сечение — соотношение двух величин, гармоническая пропорция. Простые ежедневные упражнения помогут достичь успеха. Вкуснейшая домашняя пицца на тонком бездрожжевом тесте. Готовится тесто для пиццы без дрожжей очень быстро. Он написал больше 30 хитов.`,
-    date: Date.now(),
-    categories: [
-      `За жизнь`,
-    ],
-    comments: [
-      {
-        text: `Совсем немного...`,
-      },
-      {
-        text: `Согласен с автором!`,
-      },
-    ],
-  },
-  {
-    title: `Учим HTML и CSS`,
-    announce:
-      `Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Золотое сечение — соотношение двух величин, гармоническая пропорция. Из под его пера вышло 8 платиновых альбомов. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. У нас есть лайфхак для тех, кто любит отдыхать на свежем воздухе!`,
-    fullText:
-      `Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Как начать действовать? Для начала просто соберитесь. Это один из лучших рок-музыкантов. Первая большая ёлка была установлена только в 1938 году. Из под его пера вышло 8 платиновых альбомов. Собрать камни бесконечности легко, если вы прирожденный герой. У нас есть лайфхак для тех, кто любит отдыхать на свежем воздухе! Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Золотое сечение — соотношение двух величин, гармоническая пропорция. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Программировать не настолько сложно, как об этом говорят. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Он написал больше 30 хитов. Вкуснейшая домашняя пицца на тонком бездрожжевом тесте. Готовится тесто для пиццы без дрожжей очень быстро.`,
-    date: Date.now(),
-    categories: [`Программирование`],
-    comments: [
-      {
-        text: `Мне не нравится ваш стиль. Ощущение, что вы меня поучаете. Хочу такую же футболку :-)`,
-      },
-      {
-        text: `Плюсую, но слишком много буквы!`,
-      },
-      {
-        text: `Давно не пользуюсь стационарными компьютерами. Ноутбуки победили. Это где ж такие красоты? Планируете записать видосик на эту тему?`,
-      },
-      {
-        text: `Совсем немного... Планируете записать видосик на эту тему? Согласен с автором!`,
-      },
-    ],
-  },
-  {
-    title: `Учим HTML и CSS`,
-    announce:
-      `Как начать действовать? Для начала просто соберитесь. Достичь успеха помогут ежедневные повторения. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Ёлки — это не просто красивое дерево. Это прочная древесина.`,
-    fullText:
-      `Ёлки — это не просто красивое дерево. Это прочная древесина. Как начать действовать? Для начала просто соберитесь. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? У нас есть лайфхак для тех, кто любит отдыхать на свежем воздухе! Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Согласно официальной версии, принятой в настоящее время, город был основан более 1000 лет назад. Программировать не настолько сложно, как об этом говорят. Золотое сечение — соотношение двух величин, гармоническая пропорция. Он написал больше 30 хитов. Из под его пера вышло 8 платиновых альбомов. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много.`,
-    date: Date.now(),
-    categories: [`За жизнь`],
-    comments: [
-      {
-        text: `Плюсую, но слишком много буквы! Давно не пользуюсь стационарными компьютерами. Ноутбуки победили. Хочу такую же футболку :-)`,
-      },
-      {
-        text: `Мне не нравится ваш стиль. Ощущение, что вы меня поучаете. Совсем немного... Планируете записать видосик на эту тему?`,
-      },
-      {
-        text: `Плюсую, но слишком много буквы! Мне кажется или я уже читал это где-то? Давно не пользуюсь стационарными компьютерами. Ноутбуки победили.`,
-      },
-    ],
-  },
-];
 
 const createAPI = (articleService, commentService) => {
   const app = express();
@@ -140,12 +28,13 @@ describe(`POST /articles - Posting new article`, () => {
       "announce": `Разберем фундаментальные принципы ООП`,
       "date": Date.now(),
       "fullText": `Объектно-ориентированное программирование основано на «трех китах»`,
-      "categories": [1, 2]
+      "categories": [1, 2],
+      "userId": 1
     };
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).post(`/articles`).send(newArticle);
@@ -182,7 +71,7 @@ describe(`POST /articles - Posting new article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       app = createAPI(dataService);
     });
@@ -217,7 +106,7 @@ describe(`POST /articles - Posting new article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       app = createAPI(dataService);
     });
@@ -259,7 +148,7 @@ describe(`GET /articles - Getting list of all articles`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles`);
@@ -284,7 +173,7 @@ describe(`GET /articles - Getting list of all articles`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: [], articles: []});
+      await initDB(mockDB, {categories: [], articles: [], users: []});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles`);
@@ -307,7 +196,7 @@ describe(`GET /articles/:id - Getting article with given id`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles/1`);
@@ -331,7 +220,7 @@ describe(`GET /articles/:id - Getting article with given id`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles/NONEXIST`);
@@ -357,12 +246,13 @@ describe(`PUT /articles/:id - Changing an article`, () => {
       announce: `Разберем фундаментальные принципы ООП`,
       date: Date.now(),
       fullText: `Объектно-ориентированное программирование основано на «трех китах»`,
-      categories: [3]
+      categories: [3],
+      userId: 1
     };
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).put(`/articles/1`).send(newArticle);
@@ -396,7 +286,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).put(`/articles/1`).send(newArticle);
@@ -424,7 +314,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).put(`/articles/999999`).send(newArticle);
@@ -449,7 +339,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).put(`/articles/INVALID`).send(newArticle);
@@ -468,7 +358,7 @@ describe(`DELETE /articles/:id - Deleting an article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).delete(`/articles/1`);
@@ -494,7 +384,7 @@ describe(`DELETE /articles/:id - Deleting an article`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).delete(`/articles/NONEXIST`);
@@ -513,7 +403,7 @@ describe(`GET /articles/:id/comments - Getting article comments`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles/1/comments`);
@@ -535,7 +425,7 @@ describe(`GET /articles/:id/comments - Getting article comments`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService);
       response = await request(app).get(`/articles/NONEXIST/comments`);
@@ -558,7 +448,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
       response = await request(app).post(`/articles/1/comments`).send(newComment);
@@ -588,7 +478,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
       response = await request(app).post(`/articles/1/comments`).send(invalidComment);
@@ -614,7 +504,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
       response = await request(app).post(`/articles/9999/comments`).send(newComment);
@@ -633,7 +523,7 @@ describe(`DELETE /articles/:id/comments/:id - Deleting an article comment`, () =
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
       response = await request(app).delete(`/articles/1/comments/1`);
@@ -659,7 +549,7 @@ describe(`DELETE /articles/:id/comments/:id - Deleting an article comment`, () =
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataService = new DataService(mockDB);
       const app = createAPI(dataService, new CommentService(mockDB));
       response = await request(app).delete(`/articles/1/comments/NONEXIST`);
