@@ -7,19 +7,19 @@ const upload = require(`../middlewares/upload`);
 
 articlesRouter.get(`/add`, async (req, res) => {
   const categories = await api.getCategories();
-  res.render(`new-post`, {categories});
+  res.render(`articles/new`, {categories});
 });
 
 articlesRouter.get(`/:id`, async (req, res) => {
   const {id} = req.params;
   const article = await api.getArticle(id, {comments: true});
-  res.render(`posts/post`, {article});
+  res.render(`articles/index`, {article});
 });
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
   const article = await api.getArticle(id);
-  res.render(`edit-post`, {article});
+  res.render(`articles/edit`, {article});
 });
 
 articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
@@ -43,7 +43,7 @@ articlesRouter.post(`/add`, upload.single(`photo`), async (req, res) => {
 });
 
 articlesRouter.get(`/category/:id`, (req, res) =>
-  res.render(`posts/articles-by-category`)
+  res.render(`articles/category`)
 );
 
 module.exports = articlesRouter;

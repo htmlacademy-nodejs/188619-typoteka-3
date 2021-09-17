@@ -6,11 +6,11 @@ const api = require(`../api`).getAPI();
 
 myRouter.get(`/`, async (req, res) => {
   const articles = await api.getArticles();
-  res.render(`my`, {articles});
+  res.render(`my/index`, {articles});
 });
 myRouter.get(`/comments`, async (req, res) => {
-  const articles = await api.getArticles();
-  res.render(`comments`, {articles: articles.slice(0, 10)});
+  const articles = await api.getArticles({comments: true});
+  res.render(`my/comments`, {articles: articles.slice(0, 10)});
 });
 
 module.exports = myRouter;

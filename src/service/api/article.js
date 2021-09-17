@@ -14,11 +14,14 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {comments} = req.query;
-    const offers = await articleService.findAll(comments);
-
-    return res.status(HttpCode.OK)
-      .json(offers);
+    const {offset, limit, comments} = req.query;
+    let result;
+    if (limit || offset) {
+      result = await articleService.findPage({limit, offset});
+    } else {
+      result = await articleService.findAll(comments);
+    }
+    res.status(HttpCode.OK).json(result);
   });
 
   route.get(`/:articleId`, async (req, res) => {
