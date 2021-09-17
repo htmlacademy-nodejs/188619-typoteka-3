@@ -31,7 +31,16 @@ class ArticleService {
     if (needComments) {
       include.push({
         model: this._Comment,
-        as: Aliase.COMMENTS
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USER,
+            attributes: {
+              exclude: [`passwordHash`]
+            }
+          }
+        ]
       });
     }
     return this._Article.findByPk(id, {include});

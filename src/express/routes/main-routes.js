@@ -2,7 +2,9 @@
 
 const {Router} = require(`express`);
 const mainRouter = new Router();
+const upload = require(`../middlewares/upload`);
 const api = require(`../api`).getAPI();
+const {prepareErrors} = require(`../../utils`);
 
 const ARTICLES_PER_PAGE = 8;
 
@@ -35,6 +37,28 @@ mainRouter.get(`/search`, async (req, res) => {
   }
 });
 mainRouter.get(`/categories`, (req, res) => res.render(`categories`));
+
+mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
+  const {body, file} = req;
+
+  const userData = {
+    avatar: file ? file.filename : ``,
+    name: body.name,
+    surname: body.surname,
+    email: body.email,
+    password: body.password,
+    passwordRepeated: body[`repeat-password`]
+  };
+
+  try {
+    await api.createUser(userData);
+    res.redirect(`/login`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    res.render(`auth/register`, {validationMessages});
+  }
+});
+
 mainRouter.get(`/404`, (req, res) => res.render(`errors/404`, {errorCode: `404`}));
 mainRouter.get(`/500`, (req, res) => res.render(`errors/500`, {errorCode: `500`}));
 

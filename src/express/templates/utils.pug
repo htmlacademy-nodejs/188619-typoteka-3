@@ -48,6 +48,8 @@ mixin pagination(page, totalPages, width, prefix)
 
 mixin insertErrorMessage(messages)
   if messages
-    each message in messages
-      .server-error= message
+    .form__validation-error
+      ul.form__errors
+        each message in messages
+          li.form__error= message
 
