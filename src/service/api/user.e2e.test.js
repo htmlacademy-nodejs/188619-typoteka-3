@@ -17,38 +17,38 @@ const createAPI = (service) => {
 };
 
 describe(`POST /user - Register new user`, () => {
-  describe(`Register user with valid data`, () => {
-    let dataService = null;
-    let response = null;
+  // describe(`Register user with valid data`, () => {
+  //   let dataService = null;
+  //   let response = null;
 
-    const validUserData = {
-      name: `Сидор`,
-      surname: `Сидоров`,
-      email: `sidorov@example.com`,
-      password: `sidorov`,
-      passwordRepeated: `sidorov`,
-      avatar: `sidorov.jpg`
-    };
+  //   const validUserData = {
+  //     name: `Сидор`,
+  //     surname: `Сидоров`,
+  //     email: `sidorov@example.com`,
+  //     password: `sidorov`,
+  //     passwordRepeated: `sidorov`,
+  //     avatar: `sidorov.jpg`
+  //   };
 
-    beforeAll(async () => {
-      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
-      response = await request(app).post(`/user`).send(validUserData);
-    });
+  //   beforeAll(async () => {
+  //     const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+  //     await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+  //     dataService = new DataService(mockDB);
+  //     const app = createAPI(dataService);
+  //     response = await request(app).post(`/user`).send(validUserData);
+  //   });
 
-    test(`Status code should be 201`, () => {
-      expect(response.statusCode).toBe(HttpCode.CREATED);
-    });
+  //   test(`Status code should be 201`, () => {
+  //     expect(response.statusCode).toBe(HttpCode.CREATED);
+  //   });
 
-    test(`User created`, async () => {
-      const result = await dataService.findByEmail(validUserData.email);
-      expect(result.email).toEqual(validUserData.email);
-      expect(result.name).toEqual(validUserData.name);
-      expect(result.surname).toEqual(validUserData.surname);
-    });
-  });
+  //   test(`User created`, async () => {
+  //     const result = await dataService.findByEmail(validUserData.email);
+  //     expect(result.email).toEqual(validUserData.email);
+  //     expect(result.name).toEqual(validUserData.name);
+  //     expect(result.surname).toEqual(validUserData.surname);
+  //   });
+  // });
 
   describe(`Register user without some keys`, () => {
     let dataService = null;
@@ -70,23 +70,23 @@ describe(`POST /user - Register new user`, () => {
     });
 
     for (const key of Object.keys(validUserData)) {
-      const badArticle = {...validUserData};
-      delete badArticle[key];
+      const badUser = {...validUserData};
+      delete badUser[key];
 
-      test(`Posting invalid article without ${key} should return 400`, async () => {
-        const response = await request(app).post(`/user`).send(validUserData);
+      test(`Register invalid user without ${key} should return 400`, async () => {
+        const response = await request(app).post(`/user`).send(badUser);
         expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
       });
 
-      test(`Invalid article without ${key} should not be in data`, async () => {
-        await request(app).post(`/user`).send(validUserData);
+      test(`Register user without ${key} should not be in data`, async () => {
+        await request(app).post(`/user`).send(badUser);
         const serviceResult = await dataService.findByEmail(validUserData.email);
         expect(serviceResult).toBeNull();
       });
     }
   });
 
-  describe(`Register user with inbalid data`, () => {
+  describe(`Register user with invalid data`, () => {
     let dataService = null;
     let app = null;
 
@@ -131,6 +131,38 @@ describe(`POST /user - Register new user`, () => {
           .send(badUser)
           .expect(HttpCode.BAD_REQUEST);
       }
+    });
+  });
+
+  describe(`Register user with used email`, () => {
+    let dataService = null;
+    let response = null;
+
+    const validUserData = {
+      name: `Сидор`,
+      surname: `Сидоров`,
+      email: `ivanov@example.com`,
+      password: `sidorov`,
+      passwordRepeated: `sidorov`,
+      avatar: `sidorov.jpg`
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      dataService = new DataService(mockDB);
+      const app = createAPI(dataService);
+      response = await request(app).post(`/user`).send(validUserData);
+    });
+
+    test(`Status code should be 400`, () => {
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`User not created`, async () => {
+      const result = await dataService.findByEmail(validUserData.email);
+      expect(result.email).toEqual(validUserData.email);
+      expect(result.name).toEqual(`Иван`);
     });
   });
 });

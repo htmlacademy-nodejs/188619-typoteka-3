@@ -5,7 +5,6 @@ const express = require(`express`);
 const mainRoutes = require(`./routes/main-routes`);
 const articlesRoutes = require(`./routes/article-routes`);
 const myRoutes = require(`./routes/my-routes`);
-const {HttpCode} = require(`../constants`);
 
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
