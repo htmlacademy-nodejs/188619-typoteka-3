@@ -5,7 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../constants`);
 const category = require(`./category`);
-const DataService = require(`../data-service/category`);
+const DataRepository = require(`../data-repository/category`);
 const initDB = require(`../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../mocks`);
 
@@ -18,14 +18,14 @@ const createAPI = (service) => {
 
 describe(`GET /categories - Getting list of all categories`, () => {
   describe(`Getting list if categories exist`, () => {
-    let dataService = null;
+    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
       response = await request(app).get(`/categories`);
     });
 
@@ -39,14 +39,14 @@ describe(`GET /categories - Getting list of all categories`, () => {
   });
 
   describe(`Getting list if offers doesn't exist`, () => {
-    let dataService = null;
+    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: [], articles: [], users: []});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
       response = await request(app).get(`/categories`);
     });
 

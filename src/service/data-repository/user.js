@@ -1,6 +1,6 @@
 "use strict";
 
-class UserService {
+class UserRepository {
   constructor(sequelize) {
     this._User = sequelize.models.User;
   }
@@ -18,4 +18,4 @@ class UserService {
   }
 }
 
-module.exports = UserService;
+module.exports = UserRepository;

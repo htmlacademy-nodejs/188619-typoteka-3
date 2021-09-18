@@ -13,7 +13,7 @@ articlesRouter.get(`/add`, async (req, res) => {
 
 articlesRouter.get(`/:id`, async (req, res) => {
   const {id} = req.params;
-  const article = await api.getArticle(id, {comments: true});
+  const article = await api.getArticle(id, {needComments: true});
   res.render(`articles/index`, {article});
 });
 
@@ -75,7 +75,7 @@ articlesRouter.post(`/:id/comments`, async (req, res) => {
     res.redirect(`/articles/${id}`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
-    const article = await api.getArticle(id, {comments: true});
+    const article = await api.getArticle(id, {needComments: true});
     res.render(`articles/index`, {article, validationMessages});
   }
 });

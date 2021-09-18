@@ -1,6 +1,6 @@
 "use strict";
 
-class CommentService {
+class CommentRepository {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
@@ -28,4 +28,4 @@ class CommentService {
   }
 }
 
-module.exports = CommentService;
+module.exports = CommentRepository;

@@ -8,22 +8,22 @@ const article = require(`../api/article`);
 const search = require(`../api/search`);
 const user = require(`../api/user`);
 const {
-  CategoryService,
-  SearchService,
-  ArticleService,
-  CommentService,
-  UserService
-} = require(`../data-service`);
+  CategoryRepository,
+  SearchRepository,
+  ArticleRepository,
+  CommentRepository,
+  UserRepository
+} = require(`../data-repository`);
 
 const app = new Router();
 
 defineModels(sequelize);
 
 (() => {
-  category(app, new CategoryService(sequelize));
-  search(app, new SearchService(sequelize));
-  article(app, new ArticleService(sequelize), new CommentService(sequelize));
-  user(app, new UserService(sequelize));
+  category(app, new CategoryRepository(sequelize));
+  search(app, new SearchRepository(sequelize));
+  article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
+  user(app, new UserRepository(sequelize));
 })();
 
 module.exports = app;

@@ -3,7 +3,7 @@
 const {Op} = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
 
-class SearchService {
+class SearchRepository {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
   }
@@ -22,4 +22,4 @@ class SearchService {
 
 }
 
-module.exports = SearchService;
+module.exports = SearchRepository;

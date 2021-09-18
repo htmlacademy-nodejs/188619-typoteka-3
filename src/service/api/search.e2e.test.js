@@ -5,7 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../constants`);
 const search = require(`./search`);
-const DataService = require(`../data-service/search`);
+const DataRepository = require(`../data-repository/search`);
 const initDB = require(`../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../mocks`);
 
@@ -18,14 +18,14 @@ const createAPI = (service) => {
 
 describe(`GET /search - Searching by query string`, () => {
   describe(`Serching exist offer by valid query string`, () => {
-    let dataService = null;
+    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
       response = await request(app).get(`/search`).query({
         query: `Топ лайфхаки для тебя`,
       });
@@ -40,7 +40,7 @@ describe(`GET /search - Searching by query string`, () => {
     });
 
     test(`Returns correct offers`, async () => {
-      const serviceResult = await dataService.findAll(`Топ лайфхаки для тебя`);
+      const serviceResult = await dataRepository.findAll(`Топ лайфхаки для тебя`);
       const serchResult = response.body;
       expect(serchResult[0].title).toEqual(serviceResult[0].title);
       expect(serchResult[0].announce).toEqual(serviceResult[0].announce);
@@ -49,14 +49,14 @@ describe(`GET /search - Searching by query string`, () => {
   });
 
   describe(`Serching non-exist article by valid query string`, () => {
-    let dataService = null;
+    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
       response = await request(app).get(`/search`).query({
         query: `Продам свою душу`,
       });
@@ -72,14 +72,14 @@ describe(`GET /search - Searching by query string`, () => {
   });
 
   describe(`Serching article by empty query string`, () => {
-    let dataService = null;
+    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataService = new DataService(mockDB);
-      const app = createAPI(dataService);
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
       response = await request(app).get(`/search`);
     });
 

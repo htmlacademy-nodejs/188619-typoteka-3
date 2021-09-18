@@ -2,7 +2,7 @@
 
 const Aliase = require(`../models/aliase`);
 
-class ArticleService {
+class ArticleRepository {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
@@ -81,7 +81,7 @@ class ArticleService {
     return articles.map((item) => item.get());
   }
 
-  async findPage({limit, offset}) {
+  async getPage({limit, offset}) {
     const {count, rows} = await this._Article.findAndCountAll({
       limit,
       offset,
@@ -92,4 +92,4 @@ class ArticleService {
   }
 }
 
-module.exports = ArticleService;
+module.exports = ArticleRepository;
