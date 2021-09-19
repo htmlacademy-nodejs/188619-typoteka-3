@@ -3,10 +3,10 @@
 const {Router} = require(`express`);
 const sequelize = require(`../lib/sequelize`);
 const defineModels = require(`../models`);
-const category = require(`../api/category`);
-const article = require(`../api/article`);
-const search = require(`../api/search`);
-const user = require(`../api/user`);
+const category = require(`./category/category`);
+const article = require(`./article/article`);
+const search = require(`./search/search`);
+const user = require(`./user/user`);
 const {
   CategoryRepository,
   SearchRepository,

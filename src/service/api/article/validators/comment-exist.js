@@ -1,6 +1,6 @@
 'use strict';
 
-const {HttpCode} = require(`../../constants`);
+const {HttpCode} = require(`../../../../constants`);
 
 module.exports = (req, res, next) => {
   const article = res.locals.article;

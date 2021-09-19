@@ -3,12 +3,12 @@
 const express = require(`express`);
 const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode} = require(`../../../constants`);
 const article = require(`./article`);
-const DataRepository = require(`../data-repository/articles`);
-const CommentRepository = require(`../data-repository/comment`);
-const initDB = require(`../lib/init-db`);
-const {mockCategories, mockData, mockUsers} = require(`../../mocks`);
+const DataRepository = require(`../../data-repository/articles`);
+const CommentRepository = require(`../../data-repository/comment`);
+const initDB = require(`../../lib/init-db`);
+const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 
 
 const createAPI = (articleRepository, commentRepository) => {

@@ -1,12 +1,13 @@
 "use strict";
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constants`);
-const articleValidator = require(`../middlewares/article-validator`);
-const routeParamsValidator = require(`../middlewares/route-params-validator`);
-const articleExist = require(`../middlewares/article-exist`);
-const commentExist = require(`../middlewares/comment-exist`);
-const commentValidator = require(`../middlewares/comment-validator`);
+const {HttpCode} = require(`../../../constants`);
+const schemaValidator = require(`../../middlewares/schema-validator`);
+const articleSchema = require(`./validators/article-schema`);
+const routeParamsValidator = require(`../../middlewares/route-params-validator`);
+const articleExist = require(`./validators/article-exist`);
+const commentExist = require(`./validators/comment-exist`);
+const commentSchema = require(`./validators/comment-schema`);
 
 module.exports = (app, articleService, commentService) => {
   const route = new Router();
@@ -38,7 +39,10 @@ module.exports = (app, articleService, commentService) => {
 
   route.post(
       `/`,
-      [routeParamsValidator, articleValidator],
+      [
+        schemaValidator(routeParamsValidator, false),
+        schemaValidator(articleSchema),
+      ],
       async (req, res) => {
         const article = await articleService.create(req.body);
 
@@ -48,7 +52,11 @@ module.exports = (app, articleService, commentService) => {
 
   route.put(
       `/:articleId`,
-      [routeParamsValidator, articleExist(articleService), articleValidator],
+      [
+        schemaValidator(routeParamsValidator, false),
+        articleExist(articleService),
+        schemaValidator(articleSchema),
+      ],
       async (req, res) => {
         const {articleId} = req.params;
         const offer = await articleService.update(articleId, req.body);
@@ -79,7 +87,11 @@ module.exports = (app, articleService, commentService) => {
 
   route.post(
       `/:articleId/comments`,
-      [routeParamsValidator, articleExist(articleService), commentValidator],
+      [
+        schemaValidator(routeParamsValidator, false),
+        articleExist(articleService),
+        schemaValidator(commentSchema),
+      ],
       async (req, res) => {
         const {articleId} = req.params;
         const comment = await commentService.create(articleId, req.body);
