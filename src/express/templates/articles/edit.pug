@@ -17,6 +17,7 @@ block content
           a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
           .new-publication__form.form
             .form__wrapper.form__wrapper--intro
+              input(type="hidden" name="_csrf" value=csrfToken)
               .form__field
                 label
                   input(type='text' name='title' placeholder='Заголовок' value=article.title required)

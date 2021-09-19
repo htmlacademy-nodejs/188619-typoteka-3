@@ -166,3 +166,67 @@ describe(`POST /user - Register new user`, () => {
     });
   });
 });
+
+describe(`POST /auth - User auth`, () => {
+  describe(`API authenticate user if data is valid`, () => {
+    let dataRepository = null;
+    let response = null;
+
+    const validAuthData = {
+      email: `ivanov@example.com`,
+      password: `ivanov`
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
+      response = await request(app).post(`/user/auth`).send(validAuthData);
+    });
+
+    test(`Status code is 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+
+    test(`User name is Иван`, () => expect(response.body.name).toBe(`Иван`));
+  });
+
+  describe(`API refuses to authenticate user if data is invalid`, () => {
+    let dataRepository = null;
+    let response = null;
+
+    const invalidAuthData = {
+      email: `not-exist@example.com`,
+      password: `petrov`
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
+      response = await request(app).post(`/user/auth`).send(invalidAuthData);
+    });
+
+    test(`Status code is 401`, () => expect(response.statusCode).toBe(HttpCode.UNAUTHORIZED));
+  });
+
+  describe(`API refuses to authenticate user if password is invalid`, () => {
+    let dataRepository = null;
+    let response = null;
+
+    const invalidAuthData = {
+      email: `petrovt@example.com`,
+      password: `ivanov`
+    };
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      dataRepository = new DataRepository(mockDB);
+      const app = createAPI(dataRepository);
+      response = await request(app).post(`/user/auth`).send(invalidAuthData);
+    });
+
+    test(`Status code is 401`, () => expect(response.statusCode).toBe(HttpCode.UNAUTHORIZED));
+  });
+});

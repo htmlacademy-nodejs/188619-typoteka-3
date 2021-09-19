@@ -2,6 +2,7 @@
 
 const path = require(`path`);
 const express = require(`express`);
+const sessionStore = require(`../service/lib/sessions`);
 const mainRoutes = require(`./routes/main-routes`);
 const articlesRoutes = require(`./routes/article-routes`);
 const myRoutes = require(`./routes/my-routes`);
@@ -16,6 +17,7 @@ app.use(express.urlencoded({extended: false}));
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
+app.use(sessionStore);
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
