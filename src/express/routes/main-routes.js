@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const {Router} = require(`express`);
 const mainRouter = new Router();
@@ -19,7 +19,7 @@ mainRouter.get(`/`, async (req, res) => {
 
   const [{count, articles}, categories] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
-    api.getCategories({count: true})
+    api.getCategories({count: true}),
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
   res.render(`main`, {user, articles, categories, page, totalPages});
@@ -52,11 +52,13 @@ mainRouter.get(`/search`, async (req, res) => {
   } catch (error) {
     res.render(`search`, {
       results: [],
-      user
+      user,
     });
   }
 });
-mainRouter.get(`/categories`, adminRoute, (req, res) => res.render(`categories`));
+mainRouter.get(`/categories`, adminRoute, (req, res) =>
+  res.render(`categories`)
+);
 
 mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
@@ -67,7 +69,7 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
     surname: body.surname,
     email: body.email,
     password: body.password,
-    passwordRepeated: body[`repeat-password`]
+    passwordRepeated: body[`repeat-password`],
   };
 
   try {
