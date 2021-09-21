@@ -23,7 +23,7 @@ mainRouter.get(`/`, async (req, res) => {
     api.getArticles({isCommented: true})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented: JSON.stringify(mostCommented)});
+  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented});
 });
 
 mainRouter.get(`/register`, (req, res) => {
