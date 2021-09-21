@@ -93,6 +93,8 @@ class ArticleRepository {
 
   async getCommented() {
     return await this._Article.findAll({
+      limit: 4,
+      subQuery: false,
       attributes: {
         include: [
           [
@@ -109,6 +111,7 @@ class ArticleRepository {
         },
       ],
       group: [`Article.id`],
+      order: [[Sequelize.col(`commentsCount`), `DESC`]],
     });
   }
 }
