@@ -7,6 +7,7 @@ const category = require(`./category/category`);
 const article = require(`./article/article`);
 const search = require(`./search/search`);
 const user = require(`./user/user`);
+const comment = require(`./comment/comment`);
 const {
   CategoryRepository,
   SearchRepository,
@@ -24,6 +25,7 @@ defineModels(sequelize);
   search(app, new SearchRepository(sequelize));
   article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
   user(app, new UserRepository(sequelize));
+  comment(app, new CommentRepository(sequelize));
 })();
 
 module.exports = app;

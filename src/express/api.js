@@ -70,6 +70,10 @@ class API {
       data: {email, password}
     });
   }
+
+  getComments({limit}) {
+    return this._load(`/comments`, {params: {limit}});
+  }
 }
 
 const defaultAPI = new API(defaultUrl, TIMEOUT);

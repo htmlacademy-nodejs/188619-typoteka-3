@@ -20,7 +20,7 @@ module.exports = (app, articleService, commentService) => {
     if (limit || offset) {
       result = await articleService.getPage({limit, offset});
     } else if (isCommented) {
-      result = await articleService.getCommented({limit});
+      result = await articleService.getCommented();
     } else {
       result = await articleService.findAll(needComments);
     }

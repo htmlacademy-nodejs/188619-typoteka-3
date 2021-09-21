@@ -22,13 +22,9 @@ module.exports = (app, service) => {
       [schemaValidator(userSchema), userExist(service)],
       async (req, res) => {
         const data = req.body;
-
         data.passwordHash = await passwordUtils.hash(data.password);
-
         const result = await service.create(data);
-
         delete result.passwordHash;
-
         res.status(HttpCode.CREATED).json(result);
       }
   );

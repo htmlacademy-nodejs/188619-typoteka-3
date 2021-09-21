@@ -17,13 +17,15 @@ mainRouter.get(`/`, async (req, res) => {
   const limit = ARTICLES_PER_PAGE;
   const offset = (page - 1) * ARTICLES_PER_PAGE;
 
-  const [{count, articles}, categories, mostCommented] = await Promise.all([
+  const [{count, articles}, categories, mostCommented, comments] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
     api.getCategories({count: true}),
-    api.getArticles({isCommented: true})
+    api.getArticles({isCommented: true}),
+    api.getComments({limit: 4})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented});
+  console.log(comments)
+  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented, comments});
 });
 
 mainRouter.get(`/register`, (req, res) => {
