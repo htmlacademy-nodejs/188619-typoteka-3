@@ -17,12 +17,13 @@ mainRouter.get(`/`, async (req, res) => {
   const limit = ARTICLES_PER_PAGE;
   const offset = (page - 1) * ARTICLES_PER_PAGE;
 
-  const [{count, articles}, categories] = await Promise.all([
+  const [{count, articles}, categories, mostCommented] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
     api.getCategories({count: true}),
+    api.getArticles({isCommented: true})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  res.render(`main`, {user, articles, categories, page, totalPages});
+  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented: JSON.stringify(mostCommented)});
 });
 
 mainRouter.get(`/register`, (req, res) => {
@@ -56,9 +57,11 @@ mainRouter.get(`/search`, async (req, res) => {
     });
   }
 });
-mainRouter.get(`/categories`, adminRoute, (req, res) =>
-  res.render(`categories`)
-);
+
+mainRouter.get(`/categories`, adminRoute, (req, res) => {
+  const {user} = req.session;
+  res.render(`categories`, {user});
+});
 
 mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;

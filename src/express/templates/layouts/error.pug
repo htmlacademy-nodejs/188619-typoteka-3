@@ -4,10 +4,10 @@ html(lang="ru")
   body
     .wrapper-color
       header.header.header--error
-        a(href='#' class=`header__logo header__logo--${errorCode} logo`)
+        a(href='/' class=`header__logo header__logo--${errorCode} logo`)
           img(src='img/icons/logo.svg' alt='логотип Тайпотеки')
-        a.header__registration(href='#') Регистрация
-        a.header__enter(href='#') Вход с паролем
+        a.header__registration(href='/register') Регистрация
+        a.header__enter(href='/login') Вход с паролем
         a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
       main
         block content

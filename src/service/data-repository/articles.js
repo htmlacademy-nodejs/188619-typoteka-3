@@ -1,5 +1,6 @@
 "use strict";
 
+const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
 
 class ArticleRepository {
@@ -18,15 +19,13 @@ class ArticleRepository {
 
   async drop(id) {
     const deletedRows = await this._Article.destroy({
-      where: {id}
+      where: {id},
     });
     return !!deletedRows;
   }
 
   findOne(id, needComments) {
-    const include = [
-      Aliase.CATEGORIES
-    ];
+    const include = [Aliase.CATEGORIES];
 
     if (needComments) {
       include.push({
@@ -37,10 +36,10 @@ class ArticleRepository {
             model: this._User,
             as: Aliase.USER,
             attributes: {
-              exclude: [`passwordHash`]
-            }
-          }
-        ]
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
       });
     }
     return this._Article.findByPk(id, {include});
@@ -48,11 +47,11 @@ class ArticleRepository {
 
   async update(id, article) {
     const [affectedRows] = await this._Article.update(article, {
-      where: {id}
+      where: {id},
     });
 
     const updatedArticle = await this._Article.findOne({
-      where: {id}
+      where: {id},
     });
 
     await updatedArticle.setCategories(article.categories);
@@ -71,10 +70,10 @@ class ArticleRepository {
             model: this._User,
             as: Aliase.USER,
             attributes: {
-              exclude: [`passwordHash`]
-            }
-          }
-        ]
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
       });
     }
     const articles = await this._Article.findAll({include});
@@ -86,9 +85,31 @@ class ArticleRepository {
       limit,
       offset,
       include: [Aliase.CATEGORIES, Aliase.COMMENTS],
-      distinct: true
+      distinct: true,
+      order: [[`date`, `DESC`]],
     });
     return {count, articles: rows};
+  }
+
+  async getCommented() {
+    return await this._Article.findAll({
+      attributes: {
+        include: [
+          [
+            Sequelize.fn(`COUNT`, Sequelize.col(`comments.id`)),
+            `commentsCount`,
+          ],
+        ],
+      },
+      include: [
+        {
+          model: this._Comment,
+          as: Aliase.COMMENTS,
+          attributes: [],
+        },
+      ],
+      group: [`Article.id`],
+    });
   }
 }
 

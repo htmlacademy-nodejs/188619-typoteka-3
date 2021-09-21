@@ -94,13 +94,19 @@ articlesRouter.post(
 articlesRouter.post(`/:id/comments`, csrfProtection, async (req, res) => {
   const {id} = req.params;
   const {comment} = req.body;
+  const {user} = req.session;
   try {
-    await api.createComment(id, {text: comment});
+    await api.createComment(id, {userId: user.id, text: comment});
     res.redirect(`/articles/${id}`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
     const article = await api.getArticle(id, {needComments: true});
-    res.render(`articles/index`, {article, validationMessages});
+    res.render(`articles/index`, {
+      article,
+      validationMessages,
+      user,
+      csrfToken: req.csrfToken(),
+    });
   }
 });
 

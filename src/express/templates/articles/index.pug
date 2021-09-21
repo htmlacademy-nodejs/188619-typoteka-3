@@ -27,20 +27,6 @@ block content
         h2.comments__title.title.title--middle Комментарии
         ul.comments__list
           each comment in article.comments
-            li.comments__comment
-              .comments__avatar.avatar
-                img(src=`/img/${comment.User.avatar}` alt='аватар пользователя')
-              .comments__text
-                .comments__head
-                  p #{comment.User.name} #{comment.User.surname} •
-                  time.comments__date(datetime='comment.createdAt') #{humanDate(comment.createdAt)}
-                p.comments__message #{comment.text}
-        .comments__footer.comments__footer--user
-          form(action=`/articles/${article.id}/comments/` method='POST')
-            input(type="hidden" name="_csrf" value=csrfToken)
-            .comments__avatar.avatar
-              img(src="" alt='аватар пользователя')
-            label
-              textarea(rows='1' name='comment' placeholder='Присоединиться к обсуждению')
-            button.comments__button.button.button--colored(type='submit') Опубликовать
-          +insertErrorMessage(validationMessages)
+            include ../components/comment/item.pug
+        if user
+            include ../components/comment/form.pug

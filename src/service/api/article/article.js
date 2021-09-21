@@ -15,10 +15,13 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {offset, limit, needComments} = req.query;
+    const {offset, limit, needComments, isCommented} = req.query;
     let result;
     if (limit || offset) {
       result = await articleService.getPage({limit, offset});
+    } else if (isCommented) {
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      result = await articleService.getCommented({limit});
     } else {
       result = await articleService.findAll(needComments);
     }

@@ -1,0 +1,8 @@
+li.comments__comment
+  .comments__avatar.avatar
+    img(src=`/img/${comment.User.avatar}` alt='аватар пользователя')
+  .comments__text
+    .comments__head
+      p #{comment.User.name} #{comment.User.surname} •
+      time.comments__date(datetime='comment.createdAt') #{humanDate(comment.createdAt)}
+    p.comments__message #{comment.text}
