@@ -24,7 +24,6 @@ mainRouter.get(`/`, async (req, res) => {
     api.getComments({limit: 4})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  console.log(comments)
   res.render(`main`, {user, articles, categories, page, totalPages, mostCommented, comments});
 });
 
