@@ -1,19 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-
-const ErrorArticleMessage = {
-  CATEGORIES: `Не выбрана ни одна категория объявления`,
-  DATE: `Поле дата обязательно к заполнению`,
-  TITLE_MIN: `Заголовок содержит меньше 30 символов`,
-  TITLE_MAX: `Заголовок не может содержать более 250 символов`,
-  ANNOUNCE: `Поле аннонс обязательно к заполнению`,
-  ANNOUNCE_MIN: `Анонс содержит меньше 30 символов`,
-  ANNOUNCE_MAX: `Анонс не может содержать более 250 символов`,
-  PICTURE: `Тип изображения не поддерживается`,
-  TEXT_MAX: `Текст публикации не может содержать более 1000 символов`,
-  USER_ID: `Некорректный идентификатор пользователя`
-};
+const {ErrorArticleMessage} = require(`../../../../lang`);
 
 module.exports = Joi.object({
   categories: Joi.array().items(

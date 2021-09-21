@@ -1,16 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-
-const ErrorRegisterMessage = {
-  NAME: `Имя содержит некорректные символы`,
-  SURNAME: `Фамилия содержит некорректные символы`,
-  EMAIL: `Некорректный электронный адрес`,
-  EMAIL_EXIST: `Электронный адрес уже используется`,
-  PASSWORD: `Пароль содержит меньше 6-ти символов`,
-  PASSWORD_REPEATED: `Пароли не совпадают`,
-  AVATAR: `Изображение не выбрано или тип изображения не поддерживается`
-};
+const {ErrorRegisterMessage} = require(`../../../../lang`);
 
 module.exports = Joi.object({
   name: Joi.string().pattern(/[^0-9$&+,:;=?@#|'<>.^*()%!]+$/).required().messages({
