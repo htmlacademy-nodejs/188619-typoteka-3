@@ -1,7 +1,6 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {HttpCode} = require(`../../constants`);
 
 const ErrorArticleMessage = {
   CATEGORIES: `Не выбрана ни одна категория объявления`,
@@ -13,9 +12,10 @@ const ErrorArticleMessage = {
   ANNOUNCE_MAX: `Анонс не может содержать более 250 символов`,
   PICTURE: `Тип изображения не поддерживается`,
   TEXT_MAX: `Текст публикации не может содержать более 1000 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`
 };
 
-const schema = Joi.object({
+module.exports = Joi.object({
   categories: Joi.array().items(
       Joi.number().integer().positive().messages({
         'number.base': ErrorArticleMessage.CATEGORIES
@@ -39,16 +39,7 @@ const schema = Joi.object({
   fullText: Joi.string().allow(null, ``).max(1000).messages({
     'string.max': ErrorArticleMessage.TEXT_MAX
   }),
+  userId: Joi.number().integer().positive().required().messages({
+    'number.base': ErrorArticleMessage.USER_ID
+  })
 });
-
-module.exports = (req, res, next) => {
-  const newArticle = req.body;
-  const {error} = schema.validate(newArticle, {abortEarly: false});
-
-  if (error) {
-    return res.status(HttpCode.BAD_REQUEST)
-      .send(error.details.map((err) => err.message).join(`\n`));
-  }
-
-  return next();
-};

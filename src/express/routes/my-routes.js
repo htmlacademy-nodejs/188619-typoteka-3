@@ -9,7 +9,7 @@ myRouter.get(`/`, async (req, res) => {
   res.render(`my/index`, {articles});
 });
 myRouter.get(`/comments`, async (req, res) => {
-  const articles = await api.getArticles({comments: true});
+  const articles = await api.getArticles({needComments: true});
   res.render(`my/comments`, {articles: articles.slice(0, 10)});
 });
 
