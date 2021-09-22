@@ -12,8 +12,8 @@ myRouter.get(`/`, adminRoute, async (req, res) => {
 });
 myRouter.get(`/comments`, adminRoute, async (req, res) => {
   const {user} = req.session;
-  const articles = await api.getArticles({needComments: true});
-  res.render(`my/comments`, {articles: articles.slice(0, 10), user});
+  const comments = await api.getComments({needArticles: true});
+  res.render(`my/comments`, {comments, user});
 });
 
 module.exports = myRouter;

@@ -73,8 +73,8 @@ class API {
     });
   }
 
-  getComments({limit}) {
-    return this._load(`/comments`, {params: {limit}});
+  getComments({limit, needArticles}) {
+    return this._load(`/comments`, {params: {limit, needArticles}});
   }
 
   getCategory(id) {

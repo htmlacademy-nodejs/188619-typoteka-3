@@ -44,7 +44,7 @@ class ArticleRepository {
         ],
       });
       query.order = [
-        [{model: this._Comment, as: Aliase.COMMENTS}, `createdAt`, `DESC`],
+        [{model: this._Comment, as: Aliase.COMMENTS}, `createdAt`, `DESC`]
       ];
     }
     return this._Article.findByPk(id, query);

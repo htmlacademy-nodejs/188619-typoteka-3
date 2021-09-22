@@ -51,8 +51,7 @@ class CommentRepository {
 
     if (needArticles) {
       query.include.push({
-        model: this._Article,
-        as: Aliase.ARTICLES,
+        model: this._Article
       });
     }
 

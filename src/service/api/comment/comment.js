@@ -10,8 +10,8 @@ module.exports = (app, service) => {
   app.use(`/comments`, route);
 
   route.get(`/`, async (req, res) => {
-    const {limit} = req.query;
-    const comments = await service.getAll({limit});
+    const {limit, needArticles} = req.query;
+    const comments = await service.getAll({limit, needArticles});
     res.status(HttpCode.OK)
       .json(comments);
   });

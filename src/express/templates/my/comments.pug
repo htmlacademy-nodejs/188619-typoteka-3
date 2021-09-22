@@ -4,14 +4,14 @@ block content
   section.main-page__publication.publication
     h1.publication__title Комментарии
     ul.publication__list
-      each article in articles
-        each comment in article.comments
-          li.publication__list-item
-            .publication__header
-              img.publication__list-image(src='/img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-              b.publication__list-name Александр Петров
-              time.publication__item-time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-            a.publication__item-text(href=`/articles/${article.id}`) #{article.title}
-            p.publication__text-strong #{comment.text}
-            button.publication__button.button.button--close-item(type='button')
-              span.visually-hidden Закрыть строку списка
+      each comment in comments
+        li.publication__list-item
+          .publication__header
+            if comment['User.avatar']
+              img.publication__list-image(src=`/img/${comment['User.avatar']}` width='20' height='20' alt='Аватар пользователя')
+            b.publication__list-name #{comment['User.name']} #{comment['User.surname']}
+            time.publication__item-time(datetime=comment.createdAt) #{humanDate(comment.createdAt)}
+          a.publication__item-text(href=`/articles/${comment['Article.id']}`) #{comment.text}
+          p.publication__text-strong #{comment['Article.title']}
+          button.publication__button.button.button--close-item(type='button')
+            span.visually-hidden Закрыть строку списка
