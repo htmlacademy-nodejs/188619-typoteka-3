@@ -1,14 +1,17 @@
-'use strict';
+"use strict";
 
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const upload = require(`../middlewares/upload`);
 const api = require(`../api`).getAPI();
 const {prepareErrors} = require(`../../utils`);
+const userAuth = require(`../middlewares/user-auth`);
+const adminRoute = require(`../middlewares/amin-route`);
 
 const ARTICLES_PER_PAGE = 8;
 
 mainRouter.get(`/`, async (req, res) => {
+  const {user} = req.session;
   let {page = 1} = req.query;
   page = +page;
   const limit = ARTICLES_PER_PAGE;
@@ -16,27 +19,46 @@ mainRouter.get(`/`, async (req, res) => {
 
   const [{count, articles}, categories] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
-    api.getCategories({count: true})
+    api.getCategories({count: true}),
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  res.render(`main`, {articles, categories, page, totalPages});
+  res.render(`main`, {user, articles, categories, page, totalPages});
 });
 
-mainRouter.get(`/register`, (req, res) => res.render(`auth/register`));
-mainRouter.get(`/login`, (req, res) => res.render(`auth/login`));
+mainRouter.get(`/register`, (req, res) => {
+  const {user} = req.session;
+  return res.render(`auth/register`, {user});
+});
+
+mainRouter.get(`/login`, (req, res) => {
+  const {user} = req.session;
+  return res.render(`auth/login`, {user});
+});
+
+mainRouter.post(`/login`, userAuth);
+
+mainRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/`);
+});
+
 mainRouter.get(`/search`, async (req, res) => {
+  const {user} = req.session;
   try {
     const {query} = req.query;
     const results = await api.search(query);
 
-    res.render(`search`, {results});
+    res.render(`search`, {results, user});
   } catch (error) {
     res.render(`search`, {
-      results: []
+      results: [],
+      user,
     });
   }
 });
-mainRouter.get(`/categories`, (req, res) => res.render(`categories`));
+mainRouter.get(`/categories`, adminRoute, (req, res) =>
+  res.render(`categories`)
+);
 
 mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
@@ -47,7 +69,7 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
     surname: body.surname,
     email: body.email,
     password: body.password,
-    passwordRepeated: body[`repeat-password`]
+    passwordRepeated: body[`repeat-password`],
   };
 
   try {
@@ -59,7 +81,12 @@ mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-mainRouter.get(`/404`, (req, res) => res.render(`errors/404`, {errorCode: `404`}));
-mainRouter.get(`/500`, (req, res) => res.render(`errors/500`, {errorCode: `500`}));
+mainRouter.get(`/404`, (req, res) => {
+  return res.render(`errors/404`, {errorCode: `404`});
+});
+
+mainRouter.get(`/500`, (req, res) => {
+  res.render(`errors/500`, {errorCode: `500`});
+});
 
 module.exports = mainRouter;
