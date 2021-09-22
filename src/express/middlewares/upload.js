@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
   destination: uploadDirAbsolute,
   filename: (req, file, cb) => {
     const uniqueName = nanoid(10);
-    console.log('name!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', uniqueName);
     const extension = file.originalname.split(`.`).pop();
     cb(null, `${uniqueName}.${extension}`);
   }

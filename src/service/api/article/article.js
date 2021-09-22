@@ -15,15 +15,16 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {offset, limit, needComments, isCommented} = req.query;
+    const {offset, limit, needComments, isCommented, categoryId} = req.query;
     let result;
     if (limit || offset) {
-      result = await articleService.getPage({limit, offset});
+      result = await articleService.getPage({limit, offset, categoryId});
     } else if (isCommented) {
       result = await articleService.getCommented();
     } else {
       result = await articleService.findAll(needComments);
     }
+
     res.status(HttpCode.OK).json(result);
   });
 

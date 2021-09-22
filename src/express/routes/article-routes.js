@@ -8,6 +8,7 @@ const adminRoute = require(`../middlewares/amin-route`);
 const csrf = require(`csurf`);
 const csrfProtection = csrf();
 const {ensureArray, prepareErrors} = require(`../../utils`);
+const {ARTICLES_PER_PAGE} = require(`../../constants`);
 
 articlesRouter.get(`/add`, adminRoute, csrfProtection, async (req, res) => {
   const {user} = req.session;
@@ -124,9 +125,22 @@ articlesRouter.post(`/:id/comments`, csrfProtection, async (req, res) => {
   }
 });
 
-articlesRouter.get(`/category/:id`, (req, res) => {
+articlesRouter.get(`/category/:id`, async (req, res) => {
   const {user} = req.session;
-  res.render(`articles/category`, {user});
+  const {id} = req.params;
+  let {page = 1} = req.query;
+  page = +page;
+  const limit = ARTICLES_PER_PAGE;
+  const offset = (page - 1) * ARTICLES_PER_PAGE;
+
+  const [category, categories, {count, articles}] = await Promise.all([
+    api.getCategory(id),
+    api.getCategories({count: true}),
+    api.getArticles({limit, offset, categoryId: id})
+  ]);
+  const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
+
+  res.render(`articles/category`, {user, category, categories, page, totalPages, articles});
 });
 
 module.exports = articlesRouter;

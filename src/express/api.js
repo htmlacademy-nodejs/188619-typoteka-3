@@ -20,8 +20,10 @@ class API {
     return response.data;
   }
 
-  getArticles({offset, limit, needComments, isCommented} = {}) {
-    return this._load(`/articles`, {params: {offset, limit, needComments, isCommented}});
+  getArticles({offset, limit, needComments, isCommented, categoryId} = {}) {
+    return this._load(`/articles`, {
+      params: {offset, limit, needComments, isCommented, categoryId},
+    });
   }
 
   getArticle(id, {needComments, count} = {}) {
@@ -46,33 +48,37 @@ class API {
   async editArticle(id, data) {
     return this._load(`/articles/${id}`, {
       method: `PUT`,
-      data
+      data,
     });
   }
 
   async createComment(id, data) {
     return this._load(`/articles/${id}/comments`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
   createUser(data) {
     return this._load(`/user`, {
       method: `POST`,
-      data
+      data,
     });
   }
 
   auth(email, password) {
     return this._load(`/user/auth`, {
       method: `POST`,
-      data: {email, password}
+      data: {email, password},
     });
   }
 
   getComments({limit}) {
     return this._load(`/comments`, {params: {limit}});
+  }
+
+  getCategory(id) {
+    return this._load(`/categories/${id}`);
   }
 }
 
@@ -80,5 +86,5 @@ const defaultAPI = new API(defaultUrl, TIMEOUT);
 
 module.exports = {
   API,
-  getAPI: () => defaultAPI
+  getAPI: () => defaultAPI,
 };

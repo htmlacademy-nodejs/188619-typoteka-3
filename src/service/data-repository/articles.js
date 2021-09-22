@@ -42,7 +42,12 @@ class ArticleRepository {
         ],
       });
     }
-    return this._Article.findByPk(id, {include});
+    return this._Article.findByPk(id, {
+      include,
+      order: [
+        [{model: this._Comment, as: Aliase.COMMENTS}, `createdAt`, `DESC`],
+      ],
+    });
   }
 
   async update(id, article) {
@@ -80,14 +85,27 @@ class ArticleRepository {
     return articles.map((item) => item.get());
   }
 
-  async getPage({limit, offset}) {
-    const {count, rows} = await this._Article.findAndCountAll({
+  async getPage({limit, offset, categoryId}) {
+    let includeCategories = {
+      model: this._Category,
+      as: Aliase.CATEGORIES,
+    };
+
+    let query = {
       limit,
       offset,
-      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+      include: [includeCategories, Aliase.COMMENTS],
       distinct: true,
       order: [[`date`, `DESC`]],
-    });
+    };
+
+    if (categoryId) {
+      includeCategories.where = {
+        'id': categoryId
+      };
+    }
+
+    const {count, rows} = await this._Article.findAndCountAll(query);
     return {count, articles: rows};
   }
 

@@ -15,6 +15,8 @@ module.exports.HttpCode = {
   BAD_REQUEST: 400,
 };
 
+module.exports.ARTICLES_PER_PAGE = 8;
+
 module.exports.MOCKS_FILE_NAME = `mocks.json`;
 
 module.exports.MAX_ID_LENGTH = 6;

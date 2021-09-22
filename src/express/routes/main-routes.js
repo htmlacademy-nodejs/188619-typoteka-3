@@ -7,8 +7,7 @@ const api = require(`../api`).getAPI();
 const {prepareErrors} = require(`../../utils`);
 const userAuth = require(`../middlewares/user-auth`);
 const adminRoute = require(`../middlewares/amin-route`);
-
-const ARTICLES_PER_PAGE = 8;
+const {ARTICLES_PER_PAGE} = require(`../../constants`);
 
 mainRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
@@ -46,14 +45,14 @@ mainRouter.get(`/logout`, (req, res) => {
 
 mainRouter.get(`/search`, async (req, res) => {
   const {user} = req.session;
+  const {query} = req.query;
   try {
-    const {query} = req.query;
     const results = await api.search(query);
-
-    res.render(`search`, {results, user});
+    res.render(`search`, {results, user, query});
   } catch (error) {
     res.render(`search`, {
       results: [],
+      query,
       user,
     });
   }
