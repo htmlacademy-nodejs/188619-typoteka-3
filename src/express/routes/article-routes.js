@@ -40,6 +40,8 @@ articlesRouter.post(
     csrfProtection,
     async (req, res) => {
       const {body, file} = req;
+      const {user} = req.session;
+
       const articleData = {
         picture: file ? file.filename : ``,
         fullText: body[`full-text`],
@@ -47,6 +49,7 @@ articlesRouter.post(
         date: body.date,
         title: body.title,
         categories: ensureArray(body.categories),
+        userId: user.id,
       };
 
       try {
@@ -55,7 +58,11 @@ articlesRouter.post(
       } catch (errors) {
         const validationMessages = prepareErrors(errors);
         const categories = await api.getCategories();
-        res.render(`articles/new`, {categories, validationMessages});
+        res.render(`articles/new`, {
+          categories,
+          validationMessages,
+          csrfToken: req.csrfToken(),
+        });
       }
     }
 );
@@ -67,6 +74,7 @@ articlesRouter.post(
     async (req, res) => {
       const {body, file} = req;
       const {id} = req.params;
+      const {user} = req.session;
 
       const articleData = {
         picture: file ? file.filename : ``,
@@ -75,6 +83,7 @@ articlesRouter.post(
         date: new Date(body.date),
         title: body.title,
         categories: ensureArray(body.categories),
+        userId: user.id,
       };
 
       try {
@@ -86,7 +95,12 @@ articlesRouter.post(
           api.getCategories(),
           api.getArticle(id),
         ]);
-        res.render(`articles/edit`, {categories, article, validationMessages});
+        res.render(`articles/edit`, {
+          categories,
+          article,
+          validationMessages,
+          csrfToken: req.csrfToken(),
+        });
       }
     }
 );
