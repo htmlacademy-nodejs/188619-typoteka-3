@@ -106,6 +106,12 @@ class API {
       method: `DELETE`
     });
   }
+
+  deleteComment(id) {
+    return this._load(`/comments/${id}`, {
+      method: `DELETE`
+    });
+  }
 }
 
 const defaultAPI = new API(defaultUrl, TIMEOUT);

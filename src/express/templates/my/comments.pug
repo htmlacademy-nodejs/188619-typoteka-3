@@ -13,5 +13,6 @@ block content
             time.publication__item-time(datetime=comment.createdAt) #{humanDate(comment.createdAt)}
           a.publication__item-text(href=`/articles/${comment['Article.id']}`) #{comment.text}
           p.publication__text-strong #{comment['Article.title']}
-          button.publication__button.button.button--close-item(type='button')
-            span.visually-hidden Закрыть строку списка
+          form(action=`/my/comments/delete/${comment.id}` method="get") 
+            button.publication__button.button.button--close-item(type='submit')
+              span.visually-hidden Закрыть строку списка
