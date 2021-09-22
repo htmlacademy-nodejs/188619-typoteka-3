@@ -25,10 +25,12 @@ class ArticleRepository {
   }
 
   findOne(id, needComments) {
-    const include = [Aliase.CATEGORIES];
+    const query = {
+      include: [Aliase.CATEGORIES],
+    };
 
     if (needComments) {
-      include.push({
+      query.include.push({
         model: this._Comment,
         as: Aliase.COMMENTS,
         include: [
@@ -41,13 +43,11 @@ class ArticleRepository {
           },
         ],
       });
-    }
-    return this._Article.findByPk(id, {
-      include,
-      order: [
+      query.order = [
         [{model: this._Comment, as: Aliase.COMMENTS}, `createdAt`, `DESC`],
-      ],
-    });
+      ];
+    }
+    return this._Article.findByPk(id, query);
   }
 
   async update(id, article) {
@@ -101,7 +101,7 @@ class ArticleRepository {
 
     if (categoryId) {
       includeCategories.where = {
-        'id': categoryId
+        id: categoryId,
       };
     }
 

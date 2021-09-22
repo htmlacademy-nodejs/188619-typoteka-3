@@ -30,8 +30,16 @@ articlesRouter.get(
     async (req, res) => {
       const {id} = req.params;
       const {user} = req.session;
-      const article = await api.getArticle(id);
-      res.render(`articles/edit`, {article, user, csrfToken: req.csrfToken()});
+      const [article, categories] = await Promise.all([
+        api.getArticle(id),
+        api.getCategories(),
+      ]);
+      res.render(`articles/edit`, {
+        article,
+        categories,
+        user,
+        csrfToken: req.csrfToken(),
+      });
     }
 );
 
@@ -136,11 +144,28 @@ articlesRouter.get(`/category/:id`, async (req, res) => {
   const [category, categories, {count, articles}] = await Promise.all([
     api.getCategory(id),
     api.getCategories({count: true}),
-    api.getArticles({limit, offset, categoryId: id})
+    api.getArticles({limit, offset, categoryId: id}),
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
 
-  res.render(`articles/category`, {user, category, categories, page, totalPages, articles});
+  res.render(`articles/category`, {
+    user,
+    category,
+    categories,
+    page,
+    totalPages,
+    articles,
+  });
+});
+
+articlesRouter.get(`/delete/:id`, adminRoute, async (req, res) => {
+  const {id} = req.params;
+  try {
+    await api.deleteArticle(id);
+    res.redirect(`/my`);
+  } catch (error) {
+    res.redirect(`/500`);
+  }
 });
 
 module.exports = articlesRouter;

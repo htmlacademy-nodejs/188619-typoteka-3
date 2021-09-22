@@ -80,6 +80,12 @@ class API {
   getCategory(id) {
     return this._load(`/categories/${id}`);
   }
+
+  deleteArticle(id) {
+    return this._load(`/articles/${id}`, {
+      method: `DELETE`
+    });
+  }
 }
 
 const defaultAPI = new API(defaultUrl, TIMEOUT);
