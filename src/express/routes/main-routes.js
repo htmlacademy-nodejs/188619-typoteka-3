@@ -6,7 +6,6 @@ const upload = require(`../middlewares/upload`);
 const api = require(`../api`).getAPI();
 const {prepareErrors} = require(`../../utils`);
 const userAuth = require(`../middlewares/user-auth`);
-const adminRoute = require(`../middlewares/amin-route`);
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
 
 mainRouter.get(`/`, async (req, res) => {
@@ -56,11 +55,6 @@ mainRouter.get(`/search`, async (req, res) => {
       user,
     });
   }
-});
-
-mainRouter.get(`/categories`, adminRoute, (req, res) => {
-  const {user} = req.session;
-  res.render(`categories`, {user});
 });
 
 mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {

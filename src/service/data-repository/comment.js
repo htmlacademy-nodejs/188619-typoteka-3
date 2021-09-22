@@ -30,9 +30,8 @@ class CommentRepository {
     });
   }
 
-  getAll({limit}) {
-    return this._Comment.findAll({
-      limit,
+  getAll({limit, needArticles}) {
+    const query = {
       include: [
         {
           model: this._User,
@@ -44,7 +43,20 @@ class CommentRepository {
       ],
       order: [[`createdAt`, `DESC`]],
       raw: true,
-    });
+    };
+
+    if (limit) {
+      query.limit = limit;
+    }
+
+    if (needArticles) {
+      query.include.push({
+        model: this._Article,
+        as: Aliase.ARTICLES,
+      });
+    }
+
+    return this._Comment.findAll(query);
   }
 }
 

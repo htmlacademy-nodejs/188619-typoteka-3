@@ -21,7 +21,7 @@ const app = new Router();
 defineModels(sequelize);
 
 (() => {
-  category(app, new CategoryRepository(sequelize));
+  category(app, new CategoryRepository(sequelize), new ArticleRepository(sequelize));
   search(app, new SearchRepository(sequelize));
   article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
   user(app, new UserRepository(sequelize));

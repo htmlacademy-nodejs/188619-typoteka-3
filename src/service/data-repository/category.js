@@ -12,23 +12,15 @@ class CategoryRepository {
   async findAll(needCount) {
     if (needCount) {
       const result = await this._Category.findAll({
-        attributes: [
-          `id`,
-          `name`,
-          [
-            Sequelize.fn(
-                `COUNT`,
-                `*`
-            ),
-            `count`
-          ]
-        ],
+        attributes: [`id`, `name`, [Sequelize.fn(`COUNT`, `*`), `count`]],
         group: [Sequelize.col(`Category.id`)],
-        include: [{
-          model: this._ArticleCategory,
-          as: Aliase.ARTICLE_CATEGORIES,
-          attributes: []
-        }]
+        include: [
+          {
+            model: this._ArticleCategory,
+            as: Aliase.ARTICLE_CATEGORIES,
+            attributes: [],
+          },
+        ],
       });
       return result.map((it) => it.get());
     } else {
@@ -38,6 +30,23 @@ class CategoryRepository {
 
   findOne(id) {
     return this._Category.findByPk(id);
+  }
+
+  create(categoryData) {
+    return this._Category.create(categoryData);
+  }
+
+  update(id, categoryData) {
+    return this._Category.update(categoryData, {
+      where: {id}
+    });
+  }
+
+  async drop(id) {
+    const deletedRows = await this._Category.destroy({
+      where: {id},
+    });
+    return !!deletedRows;
   }
 }
 

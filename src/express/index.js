@@ -5,6 +5,7 @@ const express = require(`express`);
 const sessionStore = require(`../service/lib/sessions`);
 const mainRoutes = require(`./routes/main-routes`);
 const articlesRoutes = require(`./routes/article-routes`);
+const categoryRouter = require(`./routes/category-routes`);
 const myRoutes = require(`./routes/my-routes`);
 
 const PUBLIC_DIR = `public`;
@@ -24,6 +25,7 @@ app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
 
 app.use(`/`, mainRoutes);
 app.use(`/articles`, articlesRoutes);
+app.use(`/categories`, categoryRouter);
 app.use(`/my`, myRoutes);
 
 app.listen(DEFAULT_PORT);

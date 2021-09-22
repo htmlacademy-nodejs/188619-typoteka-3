@@ -28,8 +28,15 @@ const ErrorRegisterMessage = {
   AVATAR: `Изображение не выбрано или тип изображения не поддерживается`
 };
 
+const ErrorCategoryMessage = {
+  EMPTY: `Название категории обязательно к заполнению`,
+  MIN: `Название содержит меньше 5 символов`,
+  MAX: `Название не может содержать более 30 символов`,
+};
+
 module.exports = {
   ErrorArticleMessage,
   ErrorCommentMessage,
-  ErrorRegisterMessage
+  ErrorRegisterMessage,
+  ErrorCategoryMessage
 };

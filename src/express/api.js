@@ -86,6 +86,26 @@ class API {
       method: `DELETE`
     });
   }
+
+  createCategory(data) {
+    return this._load(`/categories`, {
+      method: `POST`,
+      data,
+    });
+  }
+
+  editCategory(id, data) {
+    return this._load(`/categories/${id}`, {
+      method: `PUT`,
+      data,
+    });
+  }
+
+  deleteCategory(id) {
+    return this._load(`/categories/${id}`, {
+      method: `DELETE`
+    });
+  }
 }
 
 const defaultAPI = new API(defaultUrl, TIMEOUT);
