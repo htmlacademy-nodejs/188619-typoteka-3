@@ -17,7 +17,7 @@ mainRouter.get(`/`, async (req, res) => {
 
   const [{count, articles}, categories, mostCommented, comments] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
-    api.getCategories({count: true}),
+    api.getCategories({needCount: true}),
     api.getArticles({isCommented: true}),
     api.getComments({limit: 4})
   ]);

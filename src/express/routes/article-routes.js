@@ -143,7 +143,7 @@ articlesRouter.get(`/category/:id`, async (req, res) => {
 
   const [category, categories, {count, articles}] = await Promise.all([
     api.getCategory(id),
-    api.getCategories({count: true}),
+    api.getCategories({needCount: true}),
     api.getArticles({limit, offset, categoryId: id}),
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);

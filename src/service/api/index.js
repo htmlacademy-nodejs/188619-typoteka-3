@@ -8,7 +8,7 @@ const article = require(`./article/article`);
 const search = require(`./search/search`);
 const user = require(`./user/user`);
 const comment = require(`./comment/comment`);
-const CategoryRepository = require(`./category/category.repository`);
+const CategoryService = require(`./category/category.service`);
 const ArticleRepository = require(`./article/articles.repository`);
 const CommentRepository = require(`./comment/comment.repository`);
 const CommentService = require(`./comment/comment.service`);
@@ -20,7 +20,7 @@ const app = new Router();
 defineModels(sequelize);
 
 (() => {
-  category(app, new CategoryRepository(sequelize), new ArticleRepository(sequelize));
+  category(app, new CategoryService(sequelize));
   search(app, new SearchService(sequelize));
   article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
   user(app, new UserService(sequelize));

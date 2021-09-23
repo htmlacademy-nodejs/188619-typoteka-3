@@ -2,19 +2,18 @@
 
 const {Router} = require(`express`);
 const schemaValidator = require(`../../middlewares/schema-validator`);
-const hasArticleValidator = require(`./validators/has-articles`);
 const categorySchema = require(`./validators/category-schema`);
 const routeParamsValidator = require(`../../middlewares/route-params-validator`);
 const {HttpCode} = require(`../../../constants`);
 
-module.exports = (app, service, articleService) => {
+module.exports = (app, service) => {
   const route = new Router();
 
   app.use(`/categories`, route);
 
   route.get(`/`, async (req, res) => {
-    const {count} = req.query;
-    const categories = await service.findAll(count);
+    const {needCount = false} = req.query;
+    const categories = await service.findAll(needCount);
     res.status(HttpCode.OK).json(categories);
   });
 
@@ -24,7 +23,10 @@ module.exports = (app, service, articleService) => {
       async (req, res) => {
         const {categoryId} = req.params;
         const category = await service.findOne(categoryId);
-        res.status(HttpCode.OK).json(category);
+        if (!category) {
+          return res.status(HttpCode.NOT_FOUND).json(`Not found`);
+        }
+        return res.status(HttpCode.OK).json(category);
       }
   );
 
@@ -46,13 +48,12 @@ module.exports = (app, service, articleService) => {
       }
   );
 
-  route.delete(
-      `/:categoryId`,
-      [hasArticleValidator(articleService)],
-      async (req, res) => {
-        const {categoryId} = req.params;
-        const category = await service.drop(categoryId);
-        return res.status(HttpCode.OK).json(category);
-      }
-  );
+  route.delete(`/:categoryId`, async (req, res) => {
+    const {categoryId} = req.params;
+    const category = await service.delete(categoryId);
+    if (!category) {
+      return res.status(HttpCode.NOT_FOUND).json(`Not found`);
+    }
+    return res.status(HttpCode.OK).json(category);
+  });
 };
