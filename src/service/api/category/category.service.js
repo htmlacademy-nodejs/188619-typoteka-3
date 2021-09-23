@@ -1,7 +1,7 @@
 "use strict";
 
 const CategoryRepository = require(`./category.repository`);
-const ArticleRepository = require(`../article/articles.repository`);
+const ArticleRepository = require(`../article/article.repository`);
 
 class CategoryService {
   constructor(sequelize) {
@@ -22,6 +22,10 @@ class CategoryService {
 
   update(id, data) {
     return this.repository.update(id, data);
+  }
+
+  create(data) {
+    return this.repository.create(data);
   }
 
   async delete(id) {

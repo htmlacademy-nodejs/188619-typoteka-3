@@ -9,8 +9,7 @@ const search = require(`./search/search`);
 const user = require(`./user/user`);
 const comment = require(`./comment/comment`);
 const CategoryService = require(`./category/category.service`);
-const ArticleRepository = require(`./article/articles.repository`);
-const CommentRepository = require(`./comment/comment.repository`);
+const ArticleService = require(`./article/article.service`);
 const CommentService = require(`./comment/comment.service`);
 const UserService = require(`./user/user.service`);
 const SearchService = require(`./search/search.service`);
@@ -22,7 +21,7 @@ defineModels(sequelize);
 (() => {
   category(app, new CategoryService(sequelize));
   search(app, new SearchService(sequelize));
-  article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
+  article(app, new ArticleService(sequelize));
   user(app, new UserService(sequelize));
   comment(app, new CommentService(sequelize));
 })();

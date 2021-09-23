@@ -24,7 +24,7 @@ class ArticleRepository {
     return !!deletedRows;
   }
 
-  findOne(id, needComments) {
+  findOne(id, needComments = false) {
     const query = {
       include: [Aliase.CATEGORIES],
     };
@@ -85,7 +85,7 @@ class ArticleRepository {
     return articles.map((item) => item.get());
   }
 
-  async getPage({limit, offset, categoryId}) {
+  async getPage({limit = 0, offset = 100, categoryId = null}) {
     let includeCategories = {
       model: this._Category,
       as: Aliase.CATEGORIES,

@@ -11,6 +11,10 @@ class CommentService {
     return this.repository.getAll({limit, needArticles});
   }
 
+  findOne(id) {
+    return this.repository.findOne(id);
+  }
+
   delete(id) {
     return this.repository.drop(id);
   }

@@ -16,6 +16,10 @@ class CommentRepository {
     });
   }
 
+  async findOne(id) {
+    return this._Comment.findByPk(id);
+  }
+
   async drop(id) {
     const deletedRows = this._Comment.destroy({
       where: {id},
