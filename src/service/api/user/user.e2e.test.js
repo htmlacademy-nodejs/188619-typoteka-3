@@ -5,7 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../../constants`);
 const user = require(`./user`);
-const DataRepository = require(`../../data-repository/user`);
+const DataRepository = require(`./user.repository`);
 const initDB = require(`../../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 

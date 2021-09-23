@@ -16,8 +16,6 @@ const mySessionStore = new SequelizeStore({
   checkExpirationInterval: 60000
 });
 
-sequelize.sync({force: false});
-
 module.exports = session({
   secret: SESSION_SECRET,
   store: mySessionStore,

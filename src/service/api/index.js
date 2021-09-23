@@ -8,13 +8,11 @@ const article = require(`./article/article`);
 const search = require(`./search/search`);
 const user = require(`./user/user`);
 const comment = require(`./comment/comment`);
-const {
-  CategoryRepository,
-  SearchRepository,
-  ArticleRepository,
-  CommentRepository,
-  UserRepository
-} = require(`../data-repository`);
+const CategoryRepository = require(`./category/category.repository`);
+const SearchRepository = require(`./search/search.repository`);
+const ArticleRepository = require(`./article/articles.repository`);
+const CommentRepository = require(`./comment/comment.repository`);
+const UserRepository = require(`./user/user.repository`);
 
 const app = new Router();
 
