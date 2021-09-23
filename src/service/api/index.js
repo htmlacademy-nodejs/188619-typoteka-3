@@ -12,7 +12,7 @@ const CategoryRepository = require(`./category/category.repository`);
 const SearchRepository = require(`./search/search.repository`);
 const ArticleRepository = require(`./article/articles.repository`);
 const CommentRepository = require(`./comment/comment.repository`);
-const UserRepository = require(`./user/user.repository`);
+const UserService = require(`./user/user.service`);
 
 const app = new Router();
 
@@ -22,7 +22,7 @@ defineModels(sequelize);
   category(app, new CategoryRepository(sequelize), new ArticleRepository(sequelize));
   search(app, new SearchRepository(sequelize));
   article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
-  user(app, new UserRepository(sequelize));
+  user(app, new UserService(sequelize));
   comment(app, new CommentRepository(sequelize));
 })();
 

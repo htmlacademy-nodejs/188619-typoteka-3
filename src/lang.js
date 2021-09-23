@@ -34,9 +34,15 @@ const ErrorCategoryMessage = {
   MAX: `Название не может содержать более 30 символов`,
 };
 
+const ErrorAuthMessage = {
+  EMAIL: `Электронный адрес не существует`,
+  PASSWORD: `Неверный пароль`,
+};
+
 module.exports = {
   ErrorArticleMessage,
   ErrorCommentMessage,
   ErrorRegisterMessage,
-  ErrorCategoryMessage
+  ErrorCategoryMessage,
+  ErrorAuthMessage
 };
