@@ -1,12 +1,12 @@
 "use strict";
 
-const SearchRepository = require(`./search.repository`);
+const ArticleRepository = require(`./article.repository`);
 
-class SearchService {
+class ArticleService {
   constructor(sequelize) {
-    this.repository = new SearchRepository(sequelize);
+    this.repository = new ArticleRepository(sequelize);
   }
 
 }
 
-module.exports = SearchService;
+module.exports = ArticleService;

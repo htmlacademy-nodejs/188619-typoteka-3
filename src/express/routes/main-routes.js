@@ -18,7 +18,7 @@ mainRouter.get(`/`, async (req, res) => {
   const [{count, articles}, categories, mostCommented, comments] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
     api.getCategories({needCount: true}),
-    api.getArticles({isCommented: true}),
+    api.getCommentedArticles({limit: 4}),
     api.getComments({limit: 4})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);

@@ -15,16 +15,20 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {offset, limit, needComments, isCommented, categoryId} = req.query;
+    const {offset, limit, needComments, categoryId} = req.query;
     let result;
     if (limit || offset) {
       result = await articleService.getPage({limit, offset, categoryId});
-    } else if (isCommented) {
-      result = await articleService.getCommented();
     } else {
       result = await articleService.findAll(needComments);
     }
 
+    res.status(HttpCode.OK).json(result);
+  });
+
+  route.get(`/most-commented`, async (req, res) => {
+    const {limit} = req.query;
+    let result = await articleService.getCommented(limit);
     res.status(HttpCode.OK).json(result);
   });
 

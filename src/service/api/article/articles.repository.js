@@ -109,9 +109,9 @@ class ArticleRepository {
     return {count, articles: rows};
   }
 
-  async getCommented() {
+  async getCommented(limit = 4) {
     return await this._Article.findAll({
-      limit: 4,
+      limit,
       subQuery: false,
       attributes: {
         include: [

@@ -20,9 +20,15 @@ class API {
     return response.data;
   }
 
-  getArticles({offset, limit, needComments, isCommented, categoryId} = {}) {
+  getArticles({offset, limit, needComments, categoryId} = {}) {
     return this._load(`/articles`, {
-      params: {offset, limit, needComments, isCommented, categoryId},
+      params: {offset, limit, needComments, categoryId},
+    });
+  }
+
+  getCommentedArticles({limit} = {}) {
+    return this._load(`/articles/most-commented`, {
+      params: {limit},
     });
   }
 
