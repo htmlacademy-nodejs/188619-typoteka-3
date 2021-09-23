@@ -5,27 +5,25 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../../constants`);
 const comment = require(`./comment`);
-const DataRepository = require(`./comment.repository`);
+const DataService = require(`./comment.service`);
 const initDB = require(`../../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 
-const createAPI = (service) => {
+const createAPI = (db) => {
   const app = express();
   app.use(express.json());
-  comment(app, service);
+  comment(app, new DataService(db));
   return app;
 };
 
 describe(`GET /comments - Getting list of all comemnts`, () => {
   describe(`Getting list if comments exist`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/comments`);
     });
 
@@ -39,14 +37,12 @@ describe(`GET /comments - Getting list of all comemnts`, () => {
   });
 
   describe(`Getting list if comments doesn't exist`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: [], articles: [], users: []});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/comments`);
     });
 

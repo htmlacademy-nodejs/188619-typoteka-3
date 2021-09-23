@@ -21,7 +21,7 @@ module.exports = (app, service) => {
       [schemaValidator(routeParamsValidator)],
       async (req, res) => {
         const {commentId} = req.params;
-        const comment = await service.drop(commentId);
+        const comment = await service.delete(commentId);
         return res.status(HttpCode.OK).json(comment);
       }
   );

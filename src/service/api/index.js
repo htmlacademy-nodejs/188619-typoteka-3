@@ -11,6 +11,7 @@ const comment = require(`./comment/comment`);
 const CategoryRepository = require(`./category/category.repository`);
 const ArticleRepository = require(`./article/articles.repository`);
 const CommentRepository = require(`./comment/comment.repository`);
+const CommentService = require(`./comment/comment.service`);
 const UserService = require(`./user/user.service`);
 const SearchService = require(`./search/search.service`);
 
@@ -23,7 +24,7 @@ defineModels(sequelize);
   search(app, new SearchService(sequelize));
   article(app, new ArticleRepository(sequelize), new CommentRepository(sequelize));
   user(app, new UserService(sequelize));
-  comment(app, new CommentRepository(sequelize));
+  comment(app, new CommentService(sequelize));
 })();
 
 module.exports = app;

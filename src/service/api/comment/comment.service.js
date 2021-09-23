@@ -1,12 +1,19 @@
 "use strict";
 
-const SearchRepository = require(`./search.repository`);
+const CommentRepository = require(`./comment.repository`);
 
-class SearchService {
+class CommentService {
   constructor(sequelize) {
-    this.repository = new SearchRepository(sequelize);
+    this.repository = new CommentRepository(sequelize);
   }
 
+  getAll({limit, needArticles}) {
+    return this.repository.getAll({limit, needArticles});
+  }
+
+  delete(id) {
+    return this.repository.drop(id);
+  }
 }
 
-module.exports = SearchService;
+module.exports = CommentService;
