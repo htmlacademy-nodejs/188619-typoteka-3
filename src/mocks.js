@@ -5,7 +5,8 @@ const passwordUtils = require(`./service/lib/password`);
 const mockCategories = [
   `За жизнь`,
   `Программирование`,
-  `Железо`
+  `Железо`,
+  `Лайфхаки`
 ];
 
 const mockUsers = [

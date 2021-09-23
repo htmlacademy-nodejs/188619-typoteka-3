@@ -50,7 +50,12 @@ module.exports = (app, service) => {
 
   route.delete(`/:categoryId`, async (req, res) => {
     const {categoryId} = req.params;
-    const category = await service.delete(categoryId);
+    let category = null;
+    try {
+      category = await service.delete(categoryId);
+    } catch (error) {
+      return res.status(HttpCode.BAD_REQUEST).send(error.message);
+    }
     if (!category) {
       return res.status(HttpCode.NOT_FOUND).json(`Not found`);
     }

@@ -26,7 +26,6 @@ class CategoryService {
 
   async delete(id) {
     const {count} = await this.articleRepository.getPage({limit: 1, offset: 1, categoryId: id});
-
     if (count) {
       throw new Error(`Невозможно удалить категорию, т.к. она содержит публикации`);
     }

@@ -106,3 +106,49 @@ describe(`GET /categories/:id - Get category`, () => {
     });
   });
 });
+
+describe(`DELETE /categories/:id - Deleting category`, () => {
+  describe(`Deleting category without articles`, () => {
+    let response = null;
+    let service = null;
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      service = new DataService(mockDB);
+      const app = createAPI(mockDB);
+      response = await request(app).delete(`/categories/4`);
+    });
+
+    test(`Status code should be 200 `, () => {
+      expect(response.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Category is deleted`, async () => {
+      const serviceResult = await service.findOne(4);
+      expect(serviceResult).toEqual(null);
+    });
+  });
+
+  describe(`Deleting category with articles`, () => {
+    let response = null;
+    let service = null;
+
+    beforeAll(async () => {
+      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
+      const app = createAPI(mockDB);
+      service = new DataService(mockDB);
+      response = await request(app).delete(`/categories/1`);
+    });
+
+    test(`Status code should be 400 `, () => {
+      expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
+    });
+
+    test(`Category is not deleted`, async () => {
+      const serviceResult = await service.findOne(1);
+      expect(serviceResult.name).toEqual(`За жизнь`);
+    });
+  });
+});
