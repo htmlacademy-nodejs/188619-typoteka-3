@@ -5,7 +5,7 @@ const sequelize = require(`../lib/sequelize`);
 const {getLogger} = require(`../lib/logger`);
 const routes = require(`../api`);
 const apiLogger = require(`../middlewares/api-logger`);
-const routeExist = require(`../middlewares/route-exist`);
+const routeNotExist = require(`../middlewares/route-not-exist`);
 const apiErorr = require(`../middlewares/api-error`);
 
 const API_PREFIX = `/api`;
@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(apiLogger);
 app.use(API_PREFIX, routes);
-app.use(routeExist);
+app.use(routeNotExist);
 app.use(apiErorr);
 
 module.exports = {
