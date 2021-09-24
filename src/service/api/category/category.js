@@ -14,9 +14,6 @@ module.exports = (app, service) => {
   route.get(`/`, async (req, res) => {
     const {needCount = false} = req.query;
     const categories = await service.findAll(needCount);
-    if (needCount) {
-      console.log(categories);
-    }
     res.status(HttpCode.OK).json(categories);
   });
 
