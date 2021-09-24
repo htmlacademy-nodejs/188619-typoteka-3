@@ -267,7 +267,6 @@ describe(`PUT /articles/:id - Changing an article`, () => {
   });
 
   describe(`Changing article with invalid data`, () => {
-    let dataRepository = null;
     let response = null;
 
     const newArticle = {
@@ -279,7 +278,6 @@ describe(`PUT /articles/:id - Changing an article`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
       const app = createAPI(mockDB);
       response = await request(app).put(`/articles/1`).send(newArticle);
     });
