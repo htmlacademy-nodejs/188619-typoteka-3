@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../../constants`);
@@ -16,9 +16,9 @@ module.exports = (app, service) => {
     }
 
     const searchResults = await service.findAll(query);
-    const searchStatus = searchResults.length > 0 ? HttpCode.OK : HttpCode.NOT_FOUND;
+    const searchStatus =
+      searchResults.length > 0 ? HttpCode.OK : HttpCode.NOT_FOUND;
 
-    res.status(searchStatus)
-      .json(searchResults);
+    res.status(searchStatus).json(searchResults);
   });
 };

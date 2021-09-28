@@ -6,9 +6,7 @@ const upload = require(`../middlewares/upload`);
 const api = require(`../api`).getAPI();
 const {prepareErrors} = require(`../../utils`);
 const userAuth = require(`../middlewares/user-auth`);
-const adminRoute = require(`../middlewares/amin-route`);
-
-const ARTICLES_PER_PAGE = 8;
+const {ARTICLES_PER_PAGE} = require(`../../constants`);
 
 mainRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
@@ -17,12 +15,14 @@ mainRouter.get(`/`, async (req, res) => {
   const limit = ARTICLES_PER_PAGE;
   const offset = (page - 1) * ARTICLES_PER_PAGE;
 
-  const [{count, articles}, categories] = await Promise.all([
+  const [{count, articles}, categories, mostCommented, comments] = await Promise.all([
     api.getArticles({limit, offset, needComments: true}),
-    api.getCategories({count: true}),
+    api.getCategories({needCount: true}),
+    api.getCommentedArticles({limit: 4}),
+    api.getComments({limit: 4})
   ]);
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
-  res.render(`main`, {user, articles, categories, page, totalPages});
+  res.render(`main`, {user, articles, categories, page, totalPages, mostCommented, comments});
 });
 
 mainRouter.get(`/register`, (req, res) => {
@@ -44,21 +44,18 @@ mainRouter.get(`/logout`, (req, res) => {
 
 mainRouter.get(`/search`, async (req, res) => {
   const {user} = req.session;
+  const {query} = req.query;
   try {
-    const {query} = req.query;
     const results = await api.search(query);
-
-    res.render(`search`, {results, user});
+    res.render(`search`, {results, user, query});
   } catch (error) {
     res.render(`search`, {
       results: [],
+      query,
       user,
     });
   }
 });
-mainRouter.get(`/categories`, adminRoute, (req, res) =>
-  res.render(`categories`)
-);
 
 mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;

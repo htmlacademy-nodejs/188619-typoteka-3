@@ -10,6 +10,12 @@
     return date.toLocaleString().slice(0, 10);
   }
 
+-
+  const slice = (text, limit = 100) => {
+    const result = text.length >= limit ? text.substring(0, limit) + `...` : text;
+    return result;
+  }
+
 mixin pagination(page, totalPages, width, prefix)
   -
     // вычислим начальную и конечную страницу диапазона без учёта ограничений
@@ -52,4 +58,3 @@ mixin insertErrorMessage(messages)
       ul.form__errors
         each message in messages
           li.form__error= message
-

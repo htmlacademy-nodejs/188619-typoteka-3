@@ -5,14 +5,15 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../../constants`);
 const user = require(`./user`);
-const DataRepository = require(`../../data-repository/user`);
+const DataRepository = require(`./user.repository`);
+const DataService = require(`./user.service`);
 const initDB = require(`../../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 
-const createAPI = (service) => {
+const createAPI = (db) => {
   const app = express();
   app.use(express.json());
-  user(app, service);
+  user(app, new DataService(db));
   return app;
 };
 
@@ -34,7 +35,7 @@ describe(`POST /user - Register new user`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/user`).send(validUserData);
     });
 
@@ -66,7 +67,7 @@ describe(`POST /user - Register new user`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      app = createAPI(dataRepository);
+      app = createAPI(mockDB);
     });
 
     for (const key of Object.keys(validUserData)) {
@@ -87,7 +88,6 @@ describe(`POST /user - Register new user`, () => {
   });
 
   describe(`Register user with invalid data`, () => {
-    let dataRepository = null;
     let app = null;
 
     const validUserData = {
@@ -101,8 +101,7 @@ describe(`POST /user - Register new user`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      app = createAPI(dataRepository);
+      app = createAPI(mockDB);
     });
 
     test(`When field type is wrong type response code is 400`, async () => {
@@ -151,7 +150,7 @@ describe(`POST /user - Register new user`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/user`).send(validUserData);
     });
 
@@ -169,7 +168,6 @@ describe(`POST /user - Register new user`, () => {
 
 describe(`POST /auth - User auth`, () => {
   describe(`API authenticate user if data is valid`, () => {
-    let dataRepository = null;
     let response = null;
 
     const validAuthData = {
@@ -180,8 +178,7 @@ describe(`POST /auth - User auth`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/user/auth`).send(validAuthData);
     });
 
@@ -191,7 +188,6 @@ describe(`POST /auth - User auth`, () => {
   });
 
   describe(`API refuses to authenticate user if data is invalid`, () => {
-    let dataRepository = null;
     let response = null;
 
     const invalidAuthData = {
@@ -202,8 +198,7 @@ describe(`POST /auth - User auth`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/user/auth`).send(invalidAuthData);
     });
 
@@ -211,7 +206,6 @@ describe(`POST /auth - User auth`, () => {
   });
 
   describe(`API refuses to authenticate user if password is invalid`, () => {
-    let dataRepository = null;
     let response = null;
 
     const invalidAuthData = {
@@ -222,8 +216,7 @@ describe(`POST /auth - User auth`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/user/auth`).send(invalidAuthData);
     });
 

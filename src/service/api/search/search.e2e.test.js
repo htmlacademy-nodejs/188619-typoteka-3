@@ -5,14 +5,15 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../../constants`);
 const search = require(`./search`);
-const DataRepository = require(`../../data-repository/search`);
+const DataRepository = require(`./search.repository`);
+const DataService = require(`./search.service`);
 const initDB = require(`../../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 
-const createAPI = (service) => {
+const createAPI = (db) => {
   const app = express();
   app.use(express.json());
-  search(app, service);
+  search(app, new DataService(db));
   return app;
 };
 
@@ -25,7 +26,7 @@ describe(`GET /search - Searching by query string`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/search`).query({
         query: `Топ лайфхаки для тебя`,
       });
@@ -49,14 +50,12 @@ describe(`GET /search - Searching by query string`, () => {
   });
 
   describe(`Serching non-exist article by valid query string`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/search`).query({
         query: `Продам свою душу`,
       });
@@ -72,14 +71,12 @@ describe(`GET /search - Searching by query string`, () => {
   });
 
   describe(`Serching article by empty query string`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/search`);
     });
 

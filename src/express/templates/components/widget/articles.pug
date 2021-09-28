@@ -1,0 +1,28 @@
+.main-page__section-flex
+  section.main-page__hot.hot
+    h2.hot__name
+      | Самое обсуждаемое 
+      span.hot__icon.hot__icon--fire
+    if mostCommented.length
+      ul.hot__list
+        each article in mostCommented
+          li.hot__list-item
+            a.hot__list-link(href=`/articles/${article.id}`)
+              | #{slice(article.announce)}
+              sup.hot__link-sup #{article.commentsCount}
+    else
+      p Здесь пока ничего нет
+  section.main-page__last.last
+    h2.last__name
+      | Последние комментарии 
+      span.last__icon.last__icon--cloud
+    if comments.length
+      ul.last__list
+        each comment in comments
+          li.last__list-item
+            if comment['User.avatar']
+              img.last__list-image(src=`/img/${comment['User.avatar']}` width='20' height='20')
+            b.last__list-name #{comment['User.name']} #{comment['User.surname']}
+            a.last__list-link(href=`/articles/${comment.articleId}`) #{slice(comment.text)}
+    else
+      p Здесь пока ничего нет

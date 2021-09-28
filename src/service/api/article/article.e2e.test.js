@@ -5,16 +5,16 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const {HttpCode} = require(`../../../constants`);
 const article = require(`./article`);
-const DataRepository = require(`../../data-repository/articles`);
-const CommentRepository = require(`../../data-repository/comment`);
+const DataRepository = require(`./article.repository`);
+const DataService = require(`./article.service`);
 const initDB = require(`../../lib/init-db`);
 const {mockCategories, mockData, mockUsers} = require(`../../../mocks`);
 
 
-const createAPI = (articleRepository, commentRepository) => {
+const createAPI = (db) => {
   const app = express();
   app.use(express.json());
-  article(app, articleRepository, commentRepository);
+  article(app, new DataService(db));
   return app;
 };
 
@@ -36,7 +36,7 @@ describe(`POST /articles - Posting new article`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).post(`/articles`).send(newArticle);
     });
 
@@ -73,7 +73,7 @@ describe(`POST /articles - Posting new article`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      app = createAPI(dataRepository);
+      app = createAPI(mockDB);
     });
 
     for (const key of Object.keys(newArticle)) {
@@ -94,7 +94,6 @@ describe(`POST /articles - Posting new article`, () => {
   });
 
   describe(`Posting article with invalid data`, () => {
-    let dataRepository = null;
     let app = null;
 
     const newArticle = {
@@ -107,8 +106,7 @@ describe(`POST /articles - Posting new article`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      app = createAPI(dataRepository);
+      app = createAPI(mockDB);
     });
 
     test(`When field type is wrong type response code is 400`, async () => {
@@ -143,14 +141,12 @@ describe(`POST /articles - Posting new article`, () => {
 
 describe(`GET /articles - Getting list of all articles`, () => {
   describe(`Getting list if articles exist`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/articles`);
     });
 
@@ -168,14 +164,12 @@ describe(`GET /articles - Getting list of all articles`, () => {
   });
 
   describe(`Getting list if offers doesn't exist`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: [], articles: [], users: []});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/articles`);
     });
 
@@ -198,7 +192,7 @@ describe(`GET /articles/:id - Getting article with given id`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/articles/1`);
     });
 
@@ -215,14 +209,12 @@ describe(`GET /articles/:id - Getting article with given id`, () => {
   });
 
   describe(`If article with given id does not exist`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).get(`/articles/NONEXIST`);
     });
 
@@ -254,7 +246,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).put(`/articles/1`).send(newArticle);
     });
 
@@ -275,7 +267,6 @@ describe(`PUT /articles/:id - Changing an article`, () => {
   });
 
   describe(`Changing article with invalid data`, () => {
-    let dataRepository = null;
     let response = null;
 
     const newArticle = {
@@ -287,8 +278,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).put(`/articles/1`).send(newArticle);
     });
 
@@ -302,21 +292,21 @@ describe(`PUT /articles/:id - Changing an article`, () => {
   });
 
   describe(`Changing not existent article`, () => {
-    let dataRepository = null;
     let response = null;
 
     const newArticle = {
       title: `Три принципа ООП: "Три кита" Объектно-ориентированного программирования`,
       announce: `Разберем фундаментальные принципы ООП`,
       fullText: `Объектно-ориентированное программирование основано на «трех китах»`,
+      userId: 1,
+      date: new Date(),
       categories: [3]
     };
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).put(`/articles/999999`).send(newArticle);
     });
 
@@ -326,7 +316,6 @@ describe(`PUT /articles/:id - Changing an article`, () => {
   });
 
   describe(`Changing article with invalid id`, () => {
-    let dataRepository = null;
     let response = null;
 
     const newArticle = {
@@ -340,8 +329,7 @@ describe(`PUT /articles/:id - Changing an article`, () => {
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).put(`/articles/INVALID`).send(newArticle);
     });
 
@@ -360,7 +348,7 @@ describe(`DELETE /articles/:id - Deleting an article`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).delete(`/articles/1`);
     });
 
@@ -379,56 +367,13 @@ describe(`DELETE /articles/:id - Deleting an article`, () => {
   });
 
   describe(`Deleting non-existent article`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
+      const app = createAPI(mockDB);
       response = await request(app).delete(`/articles/NONEXIST`);
-    });
-
-    test(`Status code should be 404`, () => {
-      expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
-    });
-  });
-});
-
-describe(`GET /articles/:id/comments - Getting article comments`, () => {
-  describe(`Getting comments of exist article`, () => {
-    let dataRepository = null;
-    let response = null;
-
-    beforeAll(async () => {
-      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
-      response = await request(app).get(`/articles/1/comments`);
-    });
-
-    test(`Status code should be 200`, () => {
-      expect(response.statusCode).toBe(HttpCode.OK);
-    });
-
-    test(`Returns correct comments`, async () => {
-      const serviceResult = await dataRepository.findOne(1, true);
-      expect(response.body[0].text).toEqual(serviceResult.comments[0].text);
-    });
-  });
-
-  describe(`Getting comments of non-exist offer`, () => {
-    let dataRepository = null;
-    let response = null;
-
-    beforeAll(async () => {
-      const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-      await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository);
-      response = await request(app).get(`/articles/NONEXIST/comments`);
     });
 
     test(`Status code should be 404`, () => {
@@ -444,13 +389,14 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
 
     const newComment = {
       text: `Полностью согласен!`,
+      userId: 1,
     };
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository, new CommentRepository(mockDB));
+      const app = createAPI(mockDB);
       response = await request(app).post(`/articles/1/comments`).send(newComment);
     });
 
@@ -464,7 +410,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
 
     test(`Comment created in data service`, async () => {
       const serviceResult = await dataRepository.findOne(1, true);
-      expect(serviceResult.comments[1].text).toEqual(newComment.text);
+      expect(serviceResult.comments[0].text).toEqual(newComment.text);
     });
   });
 
@@ -480,7 +426,7 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository, new CommentRepository(mockDB));
+      const app = createAPI(mockDB);
       response = await request(app).post(`/articles/1/comments`).send(invalidComment);
     });
 
@@ -495,18 +441,17 @@ describe(`POST /articles/:id/comments - Posting article comment`, () => {
   });
 
   describe(`Posting comment to non-exist offer`, () => {
-    let dataRepository = null;
     let response = null;
 
     const newComment = {
       text: `Полностью согласен!`,
+      userId: 1
     };
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository, new CommentRepository(mockDB));
+      const app = createAPI(mockDB);
       response = await request(app).post(`/articles/9999/comments`).send(newComment);
     });
 
@@ -525,7 +470,7 @@ describe(`DELETE /articles/:id/comments/:id - Deleting an article comment`, () =
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
       dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository, new CommentRepository(mockDB));
+      const app = createAPI(mockDB);
       response = await request(app).delete(`/articles/1/comments/1`);
     });
 
@@ -544,14 +489,12 @@ describe(`DELETE /articles/:id/comments/:id - Deleting an article comment`, () =
   });
 
   describe(`Deleting non-existent comment`, () => {
-    let dataRepository = null;
     let response = null;
 
     beforeAll(async () => {
       const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
       await initDB(mockDB, {categories: mockCategories, articles: mockData, users: mockUsers});
-      dataRepository = new DataRepository(mockDB);
-      const app = createAPI(dataRepository, new CommentRepository(mockDB));
+      const app = createAPI(mockDB);
       response = await request(app).delete(`/articles/1/comments/NONEXIST`);
     });
 

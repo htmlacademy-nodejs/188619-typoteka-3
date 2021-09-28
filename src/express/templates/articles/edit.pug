@@ -6,7 +6,7 @@ block content
       .new-publication
         form(action=`/articles/edit/${article.id}` method='POST' enctype='multipart/form-data' autocomplete='off')
           .new-publication__header
-            h1 Новая публикация
+            h1 Изменение публикации
             .new-publication__date-form
               h3 Дата публикации
               .new-publication__date-form-division
@@ -23,15 +23,15 @@ block content
                   input(type='text' name='title' placeholder='Заголовок' value=article.title required)
               .form__field.form__field--post-image
                 label
-                  input#image-name-field(type='text' name='file' placeholder='Фотография' readonly)
+                  input#image-name-field(type='text' name='file' placeholder='Фотография' value=article.picture readonly)
                 .form__image-loader.form__image-loader--publication
                   label
                     input.visually-hidden(type='file' name='photo')
                     | Обзор
               .new-publication__category-wrapper
-                each category in article.categories
+                each category in categories
                   .new-publication__checkbox.new-publication__checkbox--auto
-                    input(type='checkbox' name='categories' value=category.id id=category.id checked) 
+                    input(type='checkbox' name='categories' value=category.id id=category.id) 
                     label(for=category.id) #{category.name}
                 a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
             .form__wrapper.form__wrapper--text
