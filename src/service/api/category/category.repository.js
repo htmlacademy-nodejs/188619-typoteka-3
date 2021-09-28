@@ -16,7 +16,7 @@ class CategoryRepository {
 
   async findAllAndCount() {
     const result = await this._Category.findAll({
-      attributes: [`id`, `name`, [Sequelize.fn(`COUNT`, `*`), `count`]],
+      attributes: [`id`, `name`, [Sequelize.fn(`COUNT`, Sequelize.col(`${Aliase.ARTICLE_CATEGORIES}.CategoryId`)), `count`]],
       group: [Sequelize.col(`Category.id`)],
       include: [
         {

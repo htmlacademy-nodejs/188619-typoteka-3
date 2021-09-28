@@ -6,10 +6,11 @@ block content
     h2.visually-hidden Список тем
     ul.themes
       each item in categories
-        li.themes__item
-          a.themes__item-link(href=`/articles/category/${item.id}` class=`${item.id == category.id ? 'themes__item-link--active': ''}`)
-            | #{item.name} 
-            sup #{item.count} 
+        if item.count > 0
+          li.themes__item
+            a.themes__item-link(href=`/articles/category/${item.id}` class=`${item.id == category.id ? 'themes__item-link--active': ''}`)
+              | #{item.name} 
+              sup #{item.count} 
 
 
   section.articles-category__list.preview
