@@ -6,7 +6,7 @@ const api = require(`../api`).getAPI();
 const csrf = require(`csurf`);
 const csrfProtection = csrf();
 const {prepareErrors} = require(`../../utils`);
-const adminRoute = require(`../middlewares/amin-route`);
+const adminRoute = require(`../middlewares/admin-route`);
 
 
 categoryRouter.get(`/`, [adminRoute, csrfProtection], async (req, res) => {
