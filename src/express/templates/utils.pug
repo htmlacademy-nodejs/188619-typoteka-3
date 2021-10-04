@@ -1,11 +1,11 @@
 -
-  const humanDate = (dateString) => {
+  const humanifyDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString().slice(0, -3);
   }
 
 -
-  const prettyDate = (dateString) => {
+  const prettifyDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString().slice(0, 10);
   }

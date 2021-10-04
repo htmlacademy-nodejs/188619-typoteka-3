@@ -6,7 +6,7 @@ block content
     ul.notes__list
       each article, index in articles
         li.notes__list-item(class= (index === articles.length - 1 ? "notes__list-item--last" : ""))
-          time.notes__item-time(datetime='2019-03-21T20:33') #{humanDate(article.date)}
+          time.notes__item-time(datetime='2019-03-21T20:33') #{humanifyDate(article.date)}
           a.notes__item-text(href=`/articles/${article.id}`) #{article.title}
           a.notes__button.button.button--close-item(href=`/articles/delete/${article.id}`)
             span.visually-hidden Закрыть строку списка
