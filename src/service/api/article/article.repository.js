@@ -86,12 +86,12 @@ class ArticleRepository {
   }
 
   async getPage({limit = 0, offset = 100, categoryId = null}) {
-    let includeCategories = {
+    const includeCategories = {
       model: this._Category,
       as: Aliase.CATEGORIES,
     };
 
-    let query = {
+    const query = {
       limit,
       offset,
       include: [includeCategories, Aliase.COMMENTS],

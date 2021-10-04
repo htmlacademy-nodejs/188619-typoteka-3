@@ -12,7 +12,7 @@ block content
         if results.length
           each result in results
             .search__result
-              time.search__date(datetime=result.date) #{prettyDate(result.date)}
+              time.search__date(datetime=result.date) #{prettifyDate(result.date)}
               a(href=`articles/${result.id}`).search__link
                 | #{result.title}
         else if query

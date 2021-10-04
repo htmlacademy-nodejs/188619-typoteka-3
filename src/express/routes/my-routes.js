@@ -1,7 +1,7 @@
 "use strict";
 
 const {Router} = require(`express`);
-const adminRoute = require(`../middlewares/amin-route`);
+const adminRoute = require(`../middlewares/admin-route`);
 const myRouter = new Router();
 const api = require(`../api`).getAPI();
 

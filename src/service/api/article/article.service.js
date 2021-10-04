@@ -12,9 +12,9 @@ class ArticleService {
   getArticles({offset, limit, needComments, categoryId}) {
     if (offset && limit) {
       return this.repository.getPage({offset, limit, categoryId});
-    } else {
-      return this.repository.findAll(needComments);
     }
+
+    return this.repository.findAll(needComments);
   }
 
   getMostCommented(limit) {

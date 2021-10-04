@@ -10,7 +10,7 @@ block content
             if comment['User.avatar']
               img.publication__list-image(src=`/img/${comment['User.avatar']}` width='20' height='20' alt='Аватар пользователя')
             b.publication__list-name #{comment['User.name']} #{comment['User.surname']}
-            time.publication__item-time(datetime=comment.createdAt) #{humanDate(comment.createdAt)}
+            time.publication__item-time(datetime=comment.createdAt) #{humanifyDate(comment.createdAt)}
           a.publication__item-text(href=`/articles/${comment['Article.id']}`) #{comment.text}
           p.publication__text-strong #{comment['Article.title']}
           form(action=`/my/comments/delete/${comment.id}` method="get") 

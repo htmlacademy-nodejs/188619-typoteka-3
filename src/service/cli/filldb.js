@@ -27,10 +27,13 @@ const MAX_ANNOUNCE_SENTENCES = 3;
 const MAX_TEXT_SENTENCES = 5;
 const MAX_MONTHS_AGO = 3;
 const MAX_COMMENTS_COUNT = 5;
-const FILE_TITLES_PATH = `./data/titles.txt`;
-const FILE_SENTENCES_PATH = `./data/sentences.txt`;
-const FILE_CATEGORIES_PATH = `./data/categories.txt`;
-const FILE_COMMENTS_PATH = `./data/comments.txt`;
+
+const FilePath = {
+  TITLES: `./data/titles.txt`,
+  SENTENCES: `./data/sentences.txt`,
+  CATEGORIES: `./data/categories.txt`,
+  COMMENTS: `./data/comments.txt`
+};
 
 const getContentFromFile = async (filtePath) => {
   try {
@@ -97,10 +100,10 @@ module.exports = {
     }
     logger.info(`Connection to database established`);
 
-    const titles = await getContentFromFile(FILE_TITLES_PATH);
-    const sentences = await getContentFromFile(FILE_SENTENCES_PATH);
-    const categories = await getContentFromFile(FILE_CATEGORIES_PATH);
-    const comments = await getContentFromFile(FILE_COMMENTS_PATH);
+    const titles = await getContentFromFile(FilePath.TITLES);
+    const sentences = await getContentFromFile(FilePath.SENTENCES);
+    const categories = await getContentFromFile(FilePath.CATEGORIES);
+    const comments = await getContentFromFile(FilePath.COMMENTS);
     const users = [
       {
         name: `Иван`,

@@ -4,5 +4,5 @@ li.comments__comment
   .comments__text
     .comments__head
       p #{comment.User.name} #{comment.User.surname} •
-      time.comments__date(datetime='comment.createdAt') #{humanDate(comment.createdAt)}
+      time.comments__date(datetime='comment.createdAt') #{humanifyDate(comment.createdAt)}
     p.comments__message #{comment.text}

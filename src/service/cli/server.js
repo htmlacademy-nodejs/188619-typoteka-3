@@ -6,7 +6,7 @@ const {getLogger} = require(`../lib/logger`);
 const routes = require(`../api`);
 const apiLogger = require(`../middlewares/api-logger`);
 const routeNotExist = require(`../middlewares/route-not-exist`);
-const apiErorr = require(`../middlewares/api-error`);
+const apiError = require(`../middlewares/api-error`);
 
 const API_PREFIX = `/api`;
 const DEFAULT_PORT = 3000;
@@ -19,7 +19,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(apiLogger);
 app.use(API_PREFIX, routes);
 app.use(routeNotExist);
-app.use(apiErorr);
+app.use(apiError);
 
 module.exports = {
   name: `--server`,
