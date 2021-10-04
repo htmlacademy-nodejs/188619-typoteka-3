@@ -13,13 +13,13 @@ module.exports = (app, service) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    let result = await service.getArticles(req.query);
+    const result = await service.getArticles(req.query);
     res.status(HttpCode.OK).json(result);
   });
 
   route.get(`/most-commented`, async (req, res) => {
     const {limit} = req.query;
-    let result = await service.getMostCommented(limit);
+    const result = await service.getMostCommented(limit);
     res.status(HttpCode.OK).json(result);
   });
 
@@ -55,27 +55,23 @@ module.exports = (app, service) => {
       ],
       async (req, res) => {
         const {articleId} = req.params;
-        let result = null;
         try {
-          result = await service.update(articleId, req.body);
+          const result = await service.update(articleId, req.body);
+          return res.status(HttpCode.OK).json(result);
         } catch (error) {
           return res.status(HttpCode.NOT_FOUND).send(error.message);
         }
-
-        return res.status(HttpCode.OK).json(result);
       }
   );
 
   route.delete(`/:articleId`, async (req, res) => {
-    let result = null;
     const {articleId} = req.params;
     try {
-      result = await service.delete(articleId);
+      const result = await service.delete(articleId);
+      return res.status(HttpCode.OK).json(result);
     } catch (error) {
       return res.status(HttpCode.NOT_FOUND).send(error.message);
     }
-
-    return res.status(HttpCode.OK).json(result);
   });
 
   route.post(
@@ -85,26 +81,23 @@ module.exports = (app, service) => {
         schemaValidator(commentSchema),
       ],
       async (req, res) => {
-        let result = null;
         const {articleId} = req.params;
         try {
-          result = await service.createComment(articleId, req.body);
+          const result = await service.createComment(articleId, req.body);
+          return res.status(HttpCode.CREATED).json(result);
         } catch (error) {
           return res.status(HttpCode.NOT_FOUND).send(error.message);
         }
-        return res.status(HttpCode.CREATED).json(result);
       }
   );
 
   route.delete(`/:articleId/comments/:commentId`, async (req, res) => {
-    let result = null;
     const {articleId, commentId} = req.params;
     try {
-      result = await service.deleteComment(articleId, commentId);
+      const result = await service.deleteComment(articleId, commentId);
+      return res.status(HttpCode.OK).json(result);
     } catch (error) {
       return res.status(HttpCode.NOT_FOUND).send(error.message);
     }
-
-    return res.status(HttpCode.OK).json(result);
   });
 };
