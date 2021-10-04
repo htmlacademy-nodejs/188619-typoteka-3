@@ -16,7 +16,7 @@ const createAPI = (db) => {
   return app;
 };
 
-describe(`GET /comments - Getting list of all comemnts`, () => {
+describe(`GET /comments - Getting list of all comments`, () => {
   describe(`Getting list if comments exist`, () => {
     let response = null;
 
