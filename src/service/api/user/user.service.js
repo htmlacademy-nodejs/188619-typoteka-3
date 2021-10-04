@@ -39,9 +39,9 @@ class UserService {
     if (passwordIsCorrect) {
       delete user.passwordHash;
       return user;
-    } else {
-      throw new Error(ErrorAuthMessage.PASSWORD);
     }
+
+    throw new Error(ErrorAuthMessage.PASSWORD);
   }
 }
 
