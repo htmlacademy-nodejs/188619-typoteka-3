@@ -11,22 +11,20 @@ module.exports = (app, service) => {
   app.use(`/user`, route);
 
   route.post(`/`, [schemaValidator(userSchema)], async (req, res) => {
-    let result = null;
     try {
-      result = await service.create(req.body);
+      const result = await service.create(req.body);
+      return res.status(HttpCode.CREATED).json(result);
     } catch (error) {
       return res.status(HttpCode.BAD_REQUEST).send(error.message);
     }
-    return res.status(HttpCode.CREATED).json(result);
   });
 
   route.post(`/auth`, async (req, res) => {
-    let result = null;
     try {
-      result = await service.auth(req.body);
+      const result = await service.auth(req.body);
+      return res.status(HttpCode.OK).json(result);
     } catch (error) {
       return res.status(HttpCode.UNAUTHORIZED).send(error.message);
     }
-    return res.status(HttpCode.OK).json(result);
   });
 };
